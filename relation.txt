@@ -1,0 +1,374 @@
+﻿===== FILE: Amenities.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+class Amenities extends Model
+{
+    public function hotels():BelongsToMany{
+        return $this->belongsToMany(Hotel::class);
+    }
+}
+
+===== FILE: AmenityHotel.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AmenityHotel extends Model
+{
+    //
+}
+
+===== FILE: Banners.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Banners extends Model
+{
+    //
+}
+
+===== FILE: Booking.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+class Booking extends Model
+{
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    public function hotel(): BelongsTo {
+        return $this->belongsTo(Hotel::class);
+    }
+
+    public function roomType(): BelongsTo {
+        return $this->belongsTo(RoomTypes::class);
+    }
+
+    public function payment(): HasOne {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function review(): HasOne {
+        return $this->hasOne(Review::class);
+    }
+
+    public function coupon(): BelongsToMany {
+        return $this->belongsToMany(Coupons::class);
+    }
+}
+
+===== FILE: BookingCoupon.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BookingCoupon extends Model
+{
+    //
+}
+
+===== FILE: Cities.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Cities extends Model
+{
+    
+}
+
+===== FILE: ContactMessages.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ContactMessages extends Model
+{
+    //
+}
+
+===== FILE: Coupons.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+class Coupons extends Model
+{
+    public function booking(): BelongsToMany {
+        return $this->belongsToMany(Booking::class);
+    }
+}
+
+===== FILE: Favorites.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Favorites extends Model
+{
+    public function user():BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    public function hotel():BelongsTo {
+        return $this->belongsTo(Hotel::class);
+    }
+}
+
+===== FILE: Hotel.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Hotel extends Model
+{
+    public function user():BelongsTo {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function image(): HasMany {
+        return $this->hasMany(HotelImages::class);
+    }
+
+    public function roomTypes(): HasMany {
+        return $this->hasMany(RoomTypes::class);
+    }
+
+    public function amenity(): BelongsToMany {
+        return $this->belongsToMany(Amenities::class);
+    }
+
+    public function bookings(): HasMany {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function reviews(): HasMany {
+        return $this->hasMany(review::class);
+    }
+
+    public function favorite(): HasMany{
+        return $this->hasMany(Favorites::class);
+    }
+
+    public function user_favorite():BelongsToMany{
+        return $this->belongsToMany(User::class,'favorites');
+    }
+
+    public function city():BelongsTo{
+        return $this->belongsTo(Cities::class);
+    }
+}
+
+===== FILE: HotelImages.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class HotelImages extends Model
+{
+    public function hotel():BelongsTo {
+        return $this->belongsTo(Hotel::class);
+    }
+}
+
+===== FILE: Notifications.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Notifications extends Model
+{
+    //
+}
+
+===== FILE: Payment.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Payment extends Model
+{
+    public function booking(): BelongsTo{
+        return $this->belongsTo(Booking::class);
+    }
+}
+
+===== FILE: Review.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Review extends Model
+{
+    public function hotel(): BelongsTo{
+        return $this->belongsTo(Hotel::class);
+    }
+
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    public function booking():BelongsTo{
+        return $this->belongsTo(Booking::class);
+    }
+}
+
+===== FILE: RoomImages.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class RoomImages extends Model
+{
+    public function roomType(): BelongsTo{
+        return $this->belongsTo(RoomTypes::class);
+    }
+}
+
+===== FILE: RoomTypes.php =====
+<?php
+
+namespace App\Models;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
+
+class RoomTypes extends Model
+{
+    public function hotel() :BelongsTo{
+        return $this->belongsTo(Hotel::class);
+    }
+
+    public function images(): HasMany{
+        return $this->hasMany(RoomImages::class);
+    }
+
+    public function bookings(): HasMany {
+        return $this->hasMany(Booking::class);
+    }
+}
+
+===== FILE: SupportTickets.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class SupportTickets extends Model
+{
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+}
+
+===== FILE: User.php =====
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+#[Fillable(['name', 'email', 'password'])]
+#[Hidden(['password', 'remember_token'])]
+class User extends Authenticatable
+{
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    public function hotel(): HasMany{
+        return $this->hasMany(Hotel::class, 'owner_id');
+    }
+
+    public function booking(): HasMany{
+        return $this->hasMany(Booking::class);
+    }
+
+    public function review(): HasMany{
+        return $this->hasMany(Review::class);
+    }
+
+    public function favorite(): HasMany{
+        return $this->hasMany(Favorites::class);
+    }
+
+    public function favorite_hotel():BelongsToMany {
+        return $this->belongsToMany(Hotel::class, 'favorites');
+    }
+
+    public function support_ticket():HasMany {
+        return $this->hasMany(SupportTickets::class);
+    }
+}
+
