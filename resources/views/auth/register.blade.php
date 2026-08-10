@@ -55,7 +55,7 @@
             <div class="auth-footer">
                 <p>
                     Already have an account?
-                    <a href="{{ route('user.login') }}">Login</a>
+                    <a href="{{ route('send.login') }}">Login</a>
                 </p>
             </div>
 

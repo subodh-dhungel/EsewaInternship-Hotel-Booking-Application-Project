@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,25 +28,52 @@ class AuthController extends Controller
             'name'=>$credentials['name'],
             'email'=>$credentials['email'],
             'password'=>$credentials['password'],
-            'role'=>'customer'
         ]);
 
-        // 3. newly created user lai logged in garne
+        // 3. newly created user lai role assign garera logged in garne
+        $customerRole = Role::where('name', 'customer')->first();
+        $user->roles()->attach($customerRole);
         Auth::login($user);
 
         // 4. User lai homepage ma redirect garne login pachi
         return redirect(route('hotels.featured'));
     }
 
+    //login form dekhauna ko lagi
     public function showLogin(){
-
+        return view('auth.login');
     }
 
     public function login(Request $request){
+        // login credentials lai validate garne
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]); 
 
+        // user lai login garna attempt garne
+        if(Auth::attempt($credentials)){
+            // Regenerate session after successful login
+            $request->session()->regenerate();
+            
+            // Redirect the authenticated user
+            return redirect()->intended(route('hotels.featured'));
+        }
+
+        // Authentication failed
+        return back()->withErrors([
+            'email'=>'The provided credentials do not match our records',
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request){
-        
+        // log the user out
+        Auth::logout();
+        //invalidate the current session
+        $request->session()->invalidate();
+        //regenerate the CSRF token
+        $request->session()->regenerateToken();
+        //redirect to the login page
+        return redirect()->route('show.login');
     }
 }

@@ -24,8 +24,15 @@
                 <a href="/contact">Contact</a>
             </nav>
             <div class="auth">
+                @guest
                 <a href="/login">Login</a>
                 <a class="btn" href="/register">Register</a>
+                @endguest
+
+                @auth
+                <p></p>
+                <a href="{{route('user.logout')}}" class="btn">Logout</a>
+                @endauth
             </div>
         </div>
     </header>
