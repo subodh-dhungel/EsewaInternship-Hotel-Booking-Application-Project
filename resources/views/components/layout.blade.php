@@ -30,8 +30,10 @@
                 @endguest
 
                 @auth
-                <p></p>
-                <a href="{{route('user.logout')}}" class="btn">Logout</a>
+                <div class="avatar">
+                    <p  class='bg-amber-200'>Hello {{auth()->user()->name}}</p>
+                    <a href="{{route('user.logout')}}" class="btn">Logout</a>
+                </div>
                 @endauth
             </div>
         </div>

@@ -11,7 +11,26 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Hotel extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'slug', 'description', 'address', 'city', 'district', 'country', 'latitude', 'longitude', 'star_rating', 'phone', 'email', 'checkin_time', 'check_out_time'];
+    protected $fillable = [
+        'owner_id',
+        'name',
+        'slug',
+        'description',
+        'address',
+        'city',
+        'district',
+        'country',
+        'latitude',
+        'longitude',
+        'star_rating',
+        'phone',
+        'email',
+        'checkin_time',
+        'check_out_time',
+        'featured_image',
+        'is_featured',
+        'status',
+    ];
 
     public function user(): BelongsTo
     {

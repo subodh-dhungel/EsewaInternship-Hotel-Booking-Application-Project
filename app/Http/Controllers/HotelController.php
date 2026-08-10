@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Hotel;
 use BcMath\Number;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class HotelController extends Controller
 {
@@ -27,7 +29,7 @@ class HotelController extends Controller
      */
     public function create()
     {
-        //
+        return view('');
     }
 
     /**
@@ -35,7 +37,33 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'=>['required', 'string', 'max:255'],
+            'description'=>['required','string'],
+            'address'=>['required','string','max:255'],
+            'city'=>['required','string','max:100'],
+            'district'=>['required','string','max:100'],
+            'country'=>['required','string','max:100'],
+            'latitude'=>['nullable','numeric'],
+            'longitude'=>['nullable', 'numeric'],
+            'star_rating'=>['required','integer','min:1','max:5'],
+            'phone'=>['required','string','max:20'],
+            'email'=>['required','email','max:255'],
+            'checkin_time'=> ['required','date_format:H:i'],
+            'check_out_time'=>['required', 'date_format:H:i'],
+        ]);
+
+        $validated['owner_id'] = Auth::id();
+        $validated['slug'] = Str::slug($validated['name']);
+        $validated['is_featured']=false;
+        $validated['status']='pending';
+
+        $hotel = Hotel::create($validated);
+
+        return redirect()
+            ->route('hotels.show',$hotel->id)
+            ->with('success','Hotel created successfully.');
+
     }
 
     /**
