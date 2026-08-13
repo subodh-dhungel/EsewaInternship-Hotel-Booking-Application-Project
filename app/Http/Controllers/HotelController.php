@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class HotelController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */
@@ -36,6 +37,7 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'name'=>['required', 'string', 'max:255'],
             'description'=>['required','string'],
@@ -65,7 +67,6 @@ class HotelController extends Controller
         return redirect()
             ->route('hotels.show',$hotel->id)
             ->with('success','Hotel created successfully.');
-
     }
 
     /**
@@ -74,6 +75,7 @@ class HotelController extends Controller
     public function show(int $id)
     {
         $hotel = Hotel::findOrFail($id);
+        $hotel->load('image');
         return view('hotels.hotelDetails', ['hotel'=>$hotel]);
     }
 

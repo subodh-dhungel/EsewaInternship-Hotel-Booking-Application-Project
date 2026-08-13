@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HotelImages extends Model
 {
+    protected $fillable = ['image'];
     use HasFactory;
     public function hotel():BelongsTo {
         return $this->belongsTo(Hotel::class);

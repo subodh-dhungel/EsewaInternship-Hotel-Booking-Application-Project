@@ -1,7 +1,4 @@
 <x-layout>
-
-
-
     <div class="Hoteldescription card">
         <h1>Hotel Description</h1>
         <p><strong>Name : </strong> {{ $hotel->name }}</p>
@@ -23,9 +20,27 @@
         <p><strong>Checkout time: </strong>{{ $hotel->check_out_time }}</p>
         <p><strong>Listing date: </strong>{{ $hotel->created_at }}</p>
 
-        <form action="#">
-            <input onclick="" type="submit">
+        <form action="{{ route('hotel-images.store', $hotel) }}" method="POST" enctype="multipart/form-data">
+
+            @csrf
+            <input class="input" type="file" name="image">
+            <button class="btn" type="submit">Upload Image</button>
         </form>
+
+        <h2>Hotel Gallery</h2>
+
+        @if ($hotel->image->isEmpty())
+            <p>There are no hotel images to show here</p>
+        @endif
+
+        @foreach ($hotel->image as $image)
+            <img src = "{{ asset('storage/' . $image->image) }}" alt="{{ $hotel->name }}" width="300">
+            <form action="{{ route('hotel-image.destroy', $image) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Delete</button>
+            </form>
+        @endforeach
     </div>
 
 </x-layout>

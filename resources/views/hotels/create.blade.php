@@ -44,6 +44,11 @@
                         <textarea id="description" name="description" required>{{ old('description') }}</textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label for="price">Per night price</lable>
+                        <input type="number" id="price" name="price" required>
+                    </div>
+
                 </div>
             </div>
 

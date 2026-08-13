@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HotelImageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,14 @@ Route::get('/hotels/{id}', [HotelController::class, 'show'])
 Route::post('/hotels',[HotelController::class, 'store'])
     ->name('hotels.store')
     ->middleware(['auth', 'permission:create_hotel']);
+
+Route::post('/hotels/{hotel}/images', [HotelImageController::class, 'store'])
+    ->name('hotel-images.store')
+    ->middleware('auth');
+
+Route::delete('/hotel-images/{image}', [HotelImageController::class, 'destroy'])
+    ->name('hotel-image.destroy')
+    ->middleware('auth');
 
 // Auth ko lagi routes
 Route::get('/login', [AuthController::class, 'showLogin'])
