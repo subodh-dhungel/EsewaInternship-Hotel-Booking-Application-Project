@@ -11,11 +11,11 @@ Route::get('/', [HotelController::class, 'featured'])
 
 Route::get('/hotels', [HotelController::class, 'index'])
     ->name('hotels.index')
-    ->middleware(['auth','permission:view_hotels']);
+    ->middleware('auth', 'permission:view_hotels');
 
 Route::get('/hotels/create', [HotelController::class, 'create'])
     ->name('hotels.create')
-    ->middleware(['auth', 'permission:create_hotels']);
+    ->middleware(['auth', 'permission:create_hotel']);
 
 Route::get('/hotels/{id}', [HotelController::class, 'show'])
     ->name('hotels.show')
@@ -23,7 +23,7 @@ Route::get('/hotels/{id}', [HotelController::class, 'show'])
 
 Route::post('/hotels',[HotelController::class, 'store'])
     ->name('hotels.store')
-    ->middleware(['auth', 'permission:create_hotels']);
+    ->middleware(['auth', 'permission:create_hotel']);
 
 // Auth ko lagi routes
 Route::get('/login', [AuthController::class, 'showLogin'])

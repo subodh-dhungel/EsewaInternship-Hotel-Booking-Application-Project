@@ -8,7 +8,7 @@
                 <p>Join eSewa Hotels and start booking your stay.</p>
             </div>
 
-            <form action="{{ route('user.create') }}" method="POST">
+            <form action="{{ route('user.register') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -55,7 +55,7 @@
             <div class="auth-footer">
                 <p>
                     Already have an account?
-                    <a href="{{ route('send.login') }}">Login</a>
+                    <a href="{{ route('show.login') }}">Login</a>
                 </p>
             </div>
 

@@ -18,13 +18,15 @@ class CheckPermission
         // get authenticated user
         $user = $request->user();
 
-        // check if not user
-        if(!$user){
-            abort(401);
-        }
+        // dd([
+        //     'user_id' => $user?->id,
+        //     'email' => $user?->email,
+        //     'permission_received' => $permission,
+        //     'has_permission' => $user?->hasPermission($permission)
+        // ]);
 
-        // check permission deny if they don't have it
-        if(!$user->hasPermission($permission)){
+        // check if not user
+        if(!$user || !$user->hasPermission($permission)){
             abort(403);
         }
 

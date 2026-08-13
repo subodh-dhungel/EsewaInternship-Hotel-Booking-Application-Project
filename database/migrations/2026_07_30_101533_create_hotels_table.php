@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('email');
             $table->time('checkin_time');
             $table->time('check_out_time');
-            $table->string('featured_image');
+            $table->string('featured_image')->nullable();
             $table->boolean('is_featured');
             $table->enum('status', ['pending','approved', 'rejected']);
             $table->timestamps();

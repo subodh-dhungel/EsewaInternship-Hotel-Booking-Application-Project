@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
-use BcMath\Number;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -29,7 +28,7 @@ class HotelController extends Controller
      */
     public function create()
     {
-        return view('');
+        return view('hotels.create');
     }
 
     /**
@@ -51,6 +50,7 @@ class HotelController extends Controller
             'email'=>['required','email','max:255'],
             'checkin_time'=> ['required','date_format:H:i'],
             'check_out_time'=>['required', 'date_format:H:i'],
+            'featured_image'=>['required','image','max:5120'],
         ]);
 
         $validated['owner_id'] = Auth::id();
@@ -58,6 +58,8 @@ class HotelController extends Controller
         $validated['is_featured']=false;
         $validated['status']='pending';
 
+        $imagePath = $request->file('featured_image')->store('hotel-images', 'public');
+        $validated['featured_image'] = $imagePath;
         $hotel = Hotel::create($validated);
 
         return redirect()
@@ -71,8 +73,6 @@ class HotelController extends Controller
      */
     public function show(int $id)
     {
-        //$hotel->all()->get();
-        //$hotel->load();
         $hotel = Hotel::findOrFail($id);
         return view('hotels.hotelDetails', ['hotel'=>$hotel]);
     }

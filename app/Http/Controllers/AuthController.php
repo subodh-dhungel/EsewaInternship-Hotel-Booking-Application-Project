@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -46,6 +47,7 @@ class AuthController extends Controller
 
     public function login(Request $request){
         // login credentials lai validate garne
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -60,6 +62,7 @@ class AuthController extends Controller
             return redirect()->intended(route('hotels.featured'));
         }
 
+        
         // Authentication failed
         return back()->withErrors([
             'email'=>'The provided credentials do not match our records',
