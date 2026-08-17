@@ -35,7 +35,7 @@ class HotelPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -48,6 +48,24 @@ class HotelPolicy
             $user->id === $hotel->owner_id
             || $user->hasRole('super_admin')
             || $user->hasRole('admin')
+        );
+    }
+
+    public function activate(User $user, Hotel $hotel):bool{
+        return $user->hasPermission('activate_hotel')
+        &&(
+            $user->id === $hotel->owner_id
+            || $user->hasRole('admin')
+            || $user->hasRole('super_admin')
+        );
+    }
+
+    public function deactivate(User $user, Hotel $hotel):bool{
+        return $user->hasPermission('deactivate_hotel')
+        &&(
+            $user->id === $hotel->owner_id
+            || $user->hasRole('admin')
+            || $user->hasRole('super_admin')
         );
     }
 

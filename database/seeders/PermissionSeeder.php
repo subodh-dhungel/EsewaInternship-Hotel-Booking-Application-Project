@@ -24,6 +24,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'approve_hotel', 'description' => 'Approve a hotel for public listing.'],
             ['name' => 'reject_hotel', 'description' => 'Reject a hotel submission.'],
             ['name' => 'feature_hotel', 'description' => 'Mark a hotel as featured on the platform.'],
+            ['name'=>'deactivate_hotel', 'description' => 'temporarily deactivate the hotel'],
+            ['name'=>'activate_hotel', 'description' =>'activate previously deactivated hotels'],
 
             // Rooms
             ['name' => 'view_rooms', 'description' => 'View room information.'],

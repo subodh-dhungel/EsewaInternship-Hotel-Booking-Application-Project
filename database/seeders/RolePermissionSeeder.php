@@ -115,6 +115,9 @@ class RolePermissionSeeder extends Seeder
                 'view_hotels',
                 'create_hotel',
                 'update_hotel',
+                'activate_hotel',
+                'deactivate_hotel',
+
 
                 //Rooms
                 'view_rooms',

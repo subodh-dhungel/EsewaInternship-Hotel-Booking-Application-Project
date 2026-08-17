@@ -3,7 +3,7 @@
     <div class="hotel-create-page">
 
         <div class="hotel-create-header">
-            <h1>Create Hotel</h1>
+            <h1>Edit your Hotel</h1>
             <p>Add a new hotel to your property portfolio.</p>
         </div>
 
@@ -46,7 +46,7 @@
 
                     <div class="form-group">
                         <label for="price" >Per night price</lable>
-                        <input type="number" id="price" name="price" value="{{old('price', $price)}}" required>
+                        <input type="number" id="price" name="price" value="{{old('price', $price)}}">
                     </div>
 
                 </div>
@@ -132,7 +132,7 @@
 
                 <div class="form-group">
                     <label for="featured_image">Featured Image</label>
-                    <input type="file" value="{{old('featured_image', $hotel->featured_image)}}" id="featured_image" name="featured_image" accept="image/*">
+                    <input type="file"  id="featured_image" name="featured_image" accept="image/*">
                 </div>
             </div>
 
@@ -142,9 +142,9 @@
                 </a>
 
                 <button type="submit" class="btn btn-primary">
-                    Create Hotel
+                    Edit Hotel
                 </button>
-            </div>
+            </div> 
 
         </form>
 

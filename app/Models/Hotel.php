@@ -15,7 +15,7 @@ class Hotel extends Model
         'owner_id',
         'name',
         'slug',
-        'description',
+        'description',  
         'address',
         'city',
         'district',

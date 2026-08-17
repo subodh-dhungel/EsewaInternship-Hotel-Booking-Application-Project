@@ -1,56 +1,137 @@
 <x-layout>
 
     <main>
-        <h1>List of hotels</h1>
-        <div class="hotel-grid">
-            @foreach ($hotels as $hotel)
-                @if ($hotels->isEmpty())
-                    <p>There are no hotels available</p>
-                @else
-                    <div class="hotel-card">
-                        <img src="{{$hotel->featured_image}}" alt="">
-                        <div class="hotel-body">
-                            <div class="rating">
-                                <div class="stars"> <span class="stars-empty">★★★★★</span> <span class="stars-filled"
-                                        style="width: {{ ($hotel->star_rating / 5) * 100 }}%;"> ★★★★★ </span> </div>
-                                <span class="rating-number"> {{ number_format($hotel->star_rating, 1) }} </span>
-                            </div>
-                            <h3>{{ $hotel->name }}</h3>
-                            <p class="amenities"> {{ $hotel->amenity->pluck('name')->implode(' • ') }} </p>
-                            <div class="price-row"> @php
-                                $room = $hotel->roomTypes
-                                    ->sortBy(function ($room) {
-                                        return $room->discount_price ?? $room->price;
-                                    })
-                                    ->first();
-                            @endphp @if ($room)
-                                    <div class="price-row">
-                                        @php
-                                            $room = $hotel->roomTypes
-                                                ->sortBy(function ($room) {
-                                                    return $room->discount_price ?? $room->price;
-                                                })
-                                                ->first();
-                                        @endphp
 
-                                        @if ($room)
-                                            <strong>
-                                                रु {{ number_format($room->discount_price ?? $room->price, 2) }}
-                                            </strong>
+        {{-- ===================================================== --}}
+        {{-- CUSTOMER                                               --}}
+        {{-- ===================================================== --}}
 
-                                            <span>/ night</span>
-                                        @else
-                                            <strong>Price unavailable</strong>
-                                        @endif
-                                    </div>
-                                @else
-                                    <strong> Price unavailable </strong>
-                                @endif <a href="/hotels/{{ $hotel->id }}" class="btn"> View
-                                </a> </div>
-                        </div>
-                    </div>
-                @endif
-            @endforeach
-        </div>
+        @if (auth()->user()->hasRole('customer'))
+
+            <h1>Hotels</h1>
+
+            @if ($hotels->isEmpty())
+
+                <p>
+                    There are no hotels available.
+                </p>
+
+            @else
+
+                <div class="hotel-grid">
+
+                    @foreach ($hotels as $hotel)
+
+                        <x-hotel-card
+                            :hotel="$hotel"
+                            status="customer"
+                        />
+
+                    @endforeach
+
+                </div>
+
+            @endif
+
+
+        {{-- ===================================================== --}}
+        {{-- HOTEL OWNER                                            --}}
+        {{-- ===================================================== --}}
+
+        @elseif (auth()->user()->hasRole('hotel_owner'))
+
+
+            {{-- ================================================= --}}
+            {{-- ACTIVE HOTELS                                      --}}
+            {{-- ================================================= --}}
+
+            <h1>My Active Hotels</h1>
+
+            @if ($activeHotels->isEmpty())
+
+                <p>
+                    You don't have any active hotels.
+                </p>
+
+            @else
+
+                <div class="hotel-grid">
+
+                    @foreach ($activeHotels as $hotel)
+
+                        <x-hotel-card
+                            :hotel="$hotel"
+                            status="active"
+                        />
+
+                    @endforeach
+
+                </div>
+
+            @endif
+
+
+            {{-- ================================================= --}}
+            {{-- PENDING HOTELS                                     --}}
+            {{-- ================================================= --}}
+
+            <h1>My Pending Hotels</h1>
+
+            @if ($pendingHotels->isEmpty())
+
+                <p>
+                    You don't have any pending hotels.
+                </p>
+
+            @else
+
+                <div class="hotel-grid">
+
+                    @foreach ($pendingHotels as $hotel)
+
+                        <x-hotel-card
+                            :hotel="$hotel"
+                            status="pending"
+                        />
+
+                    @endforeach
+
+                </div>
+
+            @endif
+
+
+            {{-- ================================================= --}}
+            {{-- INACTIVE HOTELS                                    --}}
+            {{-- ================================================= --}}
+
+            <h1>My Inactive Hotels</h1>
+
+            @if ($inactiveHotels->isEmpty())
+
+                <p>
+                    You don't have any inactive hotels.
+                </p>
+
+            @else
+
+                <div class="hotel-grid">
+
+                    @foreach ($inactiveHotels as $hotel)
+
+                        <x-hotel-card
+                            :hotel="$hotel"
+                            status="inactive"
+                        />
+
+                    @endforeach
+
+                </div>
+
+            @endif
+
+        @endif
+
     </main>
+
 </x-layout>

@@ -26,6 +26,14 @@ Route::put('/hotels/{hotel}/update',[HotelController::class, 'update'])
     ->name('hotel.update')
     ->middleware('auth', 'permission:update_hotel');
 
+Route::put('/hotels/{hotel}/deactivate',[HotelController::class, 'set_inactive'])
+    ->name('hotel.deactivate')
+    ->middleware('auth', 'permission:deactivate_hotel');
+
+Route::put('/hotels/{hotel}/activate', [HotelController::class, 'set_active'])
+    ->name('hotel.activate')
+    ->middleware('auth', 'permission:activate_hotel');
+
 Route::get('/hotels/{id}', [HotelController::class, 'show'])
     ->name('hotels.show')
     ->middleware(['auth', 'permission:view_hotels']);
@@ -36,11 +44,11 @@ Route::post('/hotels',[HotelController::class, 'store'])
 
 Route::post('/hotels/{hotel}/images', [HotelImageController::class, 'store'])
     ->name('hotel-images.store')
-    ->middleware('auth');
+    ->middleware(['auth', 'permission:upload_hotel_images']);
 
 Route::delete('/hotel-images/{image}', [HotelImageController::class, 'destroy'])
     ->name('hotel-image.destroy')
-    ->middleware('auth');
+    ->middleware('auth','permission:delete_hotel_images');
 
 // Auth ko lagi routes
 Route::get('/login', [AuthController::class, 'showLogin'])
