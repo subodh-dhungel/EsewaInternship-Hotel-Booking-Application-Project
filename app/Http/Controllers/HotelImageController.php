@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Models\Hotel;
 use App\Models\HotelImages;
 use Illuminate\Http\Request;
@@ -11,6 +12,9 @@ class HotelImageController extends Controller
 {
     
     public function store(Request $request , Hotel $hotel){
+
+        //check whether or not the user is hotel owner or not
+        Gate::authorize('create', $hotel);
 
         // Image validation
         $request->validate([
@@ -31,8 +35,14 @@ class HotelImageController extends Controller
         ]);
 
     }
+
+    public function update(HotelImages $image){
+        
+    }
     
     public function destroy(HotelImages $image){
+        // Check whether or not the user is hotel owner or not\
+        Gate::authorize('delete', $image);
         Storage::disk("public")->delete($image->image);
         $image->delete();
         return back()->with('success', 'image deleted successfully');

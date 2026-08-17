@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\RoomTypes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage; 
 
 class HotelController extends Controller
 {
@@ -16,7 +18,9 @@ class HotelController extends Controller
     public function index()
     {
         $hotels = Hotel::with('roomTypes')->get();
-        return view('hotels.hotelList', ['hotels'=>$hotels]);
+        return view('hotels.hotelList', [
+            'hotels'=>$hotels,
+        ]);
     }
 
     public function featured() {
@@ -37,7 +41,6 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'name'=>['required', 'string', 'max:255'],
             'description'=>['required','string'],
@@ -82,17 +85,55 @@ class HotelController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Hotel $hotel)
     {
-        //
+        // dd($hotel);
+        $price = RoomTypes::where('hotel_id',$hotel->id)->value('price');
+        return view('hotels.edit', [
+            'hotel'=>$hotel,
+            'price'=>$price,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Hotel $hotel)
     {
-        //
+        $validated = $request->validate([
+            'name'=>['nullable', 'string', 'max:255'],
+            'description'=>['nullable','string'],
+            'address'=>['nullable','string','max:255'],
+            'city'=>['nullable','string','max:100'],
+            'district'=>['nullable','string','max:100'],
+            'country'=>['nullable','string','max:100'],
+            'latitude'=>['nullable','numeric'],
+            'longitude'=>['nullable', 'numeric'],
+            'star_rating'=>['nullable','integer','min:1','max:5'],
+            'phone'=>['nullable','string','max:20'],
+            'email'=>['nullable','email','max:255'],
+            'checkin_time'=> ['nullable','date_format:H:i'],
+            'check_out_time'=>['nullable', 'date_format:H:i'],
+            'featured_image'=>['nullable','image','max:5120'],
+        ]);
+
+        // User le naya file upload gareko cha ki chaina check garna ko lagi
+        if($request->hasFile('featured_image')){
+            //Delete old image
+            if($hotel->featured_image){
+                $imagePath=$hotel->featured_image;
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            //insert new image
+            $validated['featured_image'] = $request->file('featured_image')->store('hotels', 'public');
+        }
+
+        $hotel->update($validated);
+
+        return redirect()
+            ->route('hotels.edit', $hotel)
+            ->with('Success', 'Hotel updated successfully');
     }
 
     /**

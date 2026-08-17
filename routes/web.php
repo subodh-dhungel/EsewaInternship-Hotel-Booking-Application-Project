@@ -18,6 +18,14 @@ Route::get('/hotels/create', [HotelController::class, 'create'])
     ->name('hotels.create')
     ->middleware(['auth', 'permission:create_hotel']);
 
+Route::get('/hotels/{hotel}/edit',[HotelController::class, 'edit'])
+    ->name('hotel.edit')
+    ->middleware(['auth', 'permission:update_hotel']);
+
+Route::put('/hotels/{hotel}/update',[HotelController::class, 'update'])
+    ->name('hotel.update')
+    ->middleware('auth', 'permission:update_hotel');
+
 Route::get('/hotels/{id}', [HotelController::class, 'show'])
     ->name('hotels.show')
     ->middleware(['auth', 'permission:view_hotels']);
@@ -37,12 +45,16 @@ Route::delete('/hotel-images/{image}', [HotelImageController::class, 'destroy'])
 // Auth ko lagi routes
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('show.login');
+
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login');
+
 Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('user.register');
+
 Route::post('/register', [AuthController::class, 'register'])
     ->name('user.create');
+
 Route::get('/logout', [AuthController::class, 'logout'])
     ->name('user.logout');
 

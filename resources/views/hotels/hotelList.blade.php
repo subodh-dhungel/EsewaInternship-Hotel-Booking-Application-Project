@@ -8,7 +8,7 @@
                     <p>There are no hotels available</p>
                 @else
                     <div class="hotel-card">
-                        <img src="https://picsum.photos/500/320?random={{ $hotel }}" alt="">
+                        <img src="{{$hotel->featured_image}}" alt="">
                         <div class="hotel-body">
                             <div class="rating">
                                 <div class="stars"> <span class="stars-empty">★★★★★</span> <span class="stars-filled"

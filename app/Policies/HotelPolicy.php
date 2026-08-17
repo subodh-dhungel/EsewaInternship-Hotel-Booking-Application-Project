@@ -43,7 +43,12 @@ class HotelPolicy
      */
     public function update(User $user, Hotel $hotel): bool
     {
-        return false;
+        return $user->hasPermission('update_hotel') 
+        &&(
+            $user->id === $hotel->owner_id
+            || $user->hasRole('super_admin')
+            || $user->hasRole('admin')
+        );
     }
 
     /**
