@@ -176,11 +176,12 @@ class HotelController extends Controller
      */
     public function set_inactive(Hotel $hotel)
     {
+
         $hotel->update([
             'status' => 'inactive',
         ]);
 
-        return redirect(route('hotels.hotelDetails.php'));
+        return route('hotels.index');
     }
 
     public function set_active(Hotel $hotel)
@@ -189,6 +190,6 @@ class HotelController extends Controller
             'status' => 'active',
         ]);
 
-        return redirect(route('hotels.hotelDetails.php'));
+        return route('hotels.index');
     }
 }
