@@ -181,7 +181,9 @@ class HotelController extends Controller
             'status' => 'inactive',
         ]);
 
-        return route('hotels.index');
+        return redirect()
+            ->route('hotels.index')
+            ->with('success', 'hotel deactivated successfully');
     }
 
     public function set_active(Hotel $hotel)
@@ -190,6 +192,8 @@ class HotelController extends Controller
             'status' => 'active',
         ]);
 
-        return route('hotels.index');
+        return redirect()
+            ->route('hotels.index')
+            ->with('status',  'hotel activated successfully');
     }
 }

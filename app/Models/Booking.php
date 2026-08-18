@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
+    protected $fillable = [
+        'booking_number',
+        'user_id',
+        'hotel_id',
+        'room_type_id',
+        'check_in',
+        'check_out',
+        'adults',
+        'children',
+        'number_of_rooms',
+        'total_price',
+        'booking_status',
+        'payment_status',
+    ];
+
     use HasFactory;
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);

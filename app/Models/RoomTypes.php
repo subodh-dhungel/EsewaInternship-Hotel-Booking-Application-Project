@@ -10,15 +10,23 @@ use Illuminate\Database\Eloquent\Model;
 class RoomTypes extends Model
 {
     use HasFactory;
-    public function hotel() :BelongsTo{
+    public function hotel() :BelongsTo
+    {
         return $this->belongsTo(Hotel::class);
     }
 
-    public function images(): HasMany{
+    public function images(): HasMany
+    {
         return $this->hasMany(RoomImages::class);
     }
 
-    public function bookings(): HasMany {
+    public function bookings(): HasMany 
+    {
         return $this->hasMany(Booking::class);
+    }
+
+    public function rooms():HasMany
+    {
+        return $this->hasMany(Room::class, 'room_type_id');
     }
 }

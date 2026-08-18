@@ -3,7 +3,7 @@
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HotelImageController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 // Hotel ko lagi routes
@@ -34,7 +34,7 @@ Route::put('/hotels/{hotel}/activate', [HotelController::class, 'set_active'])
     ->name('hotel.activate')
     ->middleware('auth', 'permission:activate_hotel');
 
-Route::get('/hotels/{id}', [HotelController::class, 'show'])
+Route::get('/hotels/{hotel}', [HotelController::class, 'show'])
     ->name('hotels.show')
     ->middleware(['auth', 'permission:view_hotels']);
 
@@ -66,33 +66,29 @@ Route::post('/register', [AuthController::class, 'register'])
 Route::get('/logout', [AuthController::class, 'logout'])
     ->name('user.logout');
 
-//fake or test route
-Route::get('/test-permission', function(){
-    return 'You have the permission!';
-})->middleware('permission:view_dashboard');
-
-Route::get('/current-user', function(){
-    $user = Auth::user();
-
-    return [
-        'id'=>$user->id,
-        'name'=>$user->name,
-        'email'=>$user->email,
-    ];
-})->middleware('auth');
-
-Route::get('/debug-user', function(){
-    $user = Auth::user();
-
-    return [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'roles'=>$user->roles,
-        'permissions'=>$user->roles
-            ->flatMap->permissions->pluck('name')
-            ->unique()
-            ->values(),
-    ];
-
+// Hotel Rooms ko lagi routes 
+Route::middleware(['auth'])->group(function(){
+    Route::get('/hotels/{hotel}/rooms', [RoomController::class, 'index'])
+        ->name('rooms.index')
+        ->middleware('permission:view_rooms');
+    
+    Route::get('/hotels/{hotel}/rooms/create', [RoomController::class, 'create'])
+        ->name('rooms.create')
+        ->middleware('permission:create_room');
+    
+    Route::post('/hotels/{hotel}/rooms', [RoomController::class, 'store'])
+        ->name('rooms.store')
+        ->middleware('permission:create_room');
+    
+    Route::get('/hotels/{hotel}/rooms/{room}/edit', [RoomController::class, 'edit'])
+        ->name('rooms.edit')
+        ->middleware('permission:update_room');
+    
+    Route::put('/hotels/{hotel}/rooms/{room}', [RoomController::class, 'update'])
+        ->name('rooms.update')
+        ->middleware('permission:update_room');
+    
+    Route::delete('/hotels/{hotel}/rooms/{room}', [RoomController::class, 'destroy'])
+        ->name('rooms.destroy')
+        ->middleware('permission:delete_room');
 });
