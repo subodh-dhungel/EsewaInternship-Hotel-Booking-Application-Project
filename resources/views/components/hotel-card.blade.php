@@ -1,10 +1,12 @@
 <div class="hotel-card">
 
     {{-- Hotel Image --}}
-    <img
-        src="{{ asset('storage/' . $hotel->featured_image) }}"
-        alt="{{ $hotel->name }}"
-    >
+    <div class="hotel-image">
+        <img
+            src="{{ asset('storage/' . $hotel->featured_image) }}"
+            alt="{{ $hotel->name }}"
+        >
+    </div>
 
     <div class="hotel-body">
 
@@ -39,13 +41,19 @@
         </h3>
 
 
+        {{-- Location --}}
+        <p class="hotel-location">
+            {{ $hotel->city }}, {{ $hotel->district }}
+        </p>
+
+
         {{-- Amenities --}}
         <p class="amenities">
             {{ $hotel->amenity->pluck('name')->implode(' • ') }}
         </p>
 
 
-        {{-- Cheapest Room --}}
+        {{-- Find Cheapest Room --}}
         @php
             $room = $hotel->roomTypes
                 ->sortBy(function ($room) {
@@ -79,95 +87,15 @@
         </div>
 
 
-        {{-- Actions --}}
+        {{-- Customer Action --}}
         <div class="hotel-actions">
 
-            {{-- View --}}
             <a
                 href="{{ route('hotels.show', $hotel->id) }}"
                 class="btn"
             >
-                View
+                View Hotel
             </a>
-
-
-            {{-- Customer --}}
-            @if ($status === 'customer')
-
-                {{-- No additional actions for customers --}}
-
-
-            {{-- Active Hotel --}}
-            @elseif ($status === 'active')
-
-                <a
-                    href="{{ route('hotel.edit', $hotel->id) }}"
-                    class="btn"
-                >
-                    Edit
-                </a>
-
-                <form
-                    action="{{ route('hotel.deactivate', $hotel->id) }}"
-                    method="POST"
-                >
-
-                    @csrf
-                    @method('PUT')
-
-                    <button
-                        type="submit"
-                        class="btn-alert"
-                    >
-                        Deactivate
-                    </button>
-
-                </form>
-
-
-            {{-- Pending Hotel --}}
-            @elseif ($status === 'pending')
-
-                <a
-                    href="{{ route('hotel.edit', $hotel->id) }}"
-                    class="btn"
-                >
-                    Edit
-                </a>
-
-                <span class="hotel-status">
-                    Pending Approval
-                </span>
-
-
-            {{-- Inactive Hotel --}}
-            @elseif ($status === 'inactive')
-
-                <a
-                    href="{{ route('hotel.edit', $hotel->id) }}"
-                    class="btn"
-                >
-                    Edit
-                </a>
-
-                <form
-                    action="{{ route('hotel.activate', $hotel->id) }}"
-                    method="POST"
-                >
-
-                    @csrf
-                    @method('PUT')
-
-                    <button
-                        type="submit"
-                        class="btn"
-                    >
-                        Activate
-                    </button>
-
-                </form>
-
-            @endif
 
         </div>
 

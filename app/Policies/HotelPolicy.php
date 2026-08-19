@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Hotel;
 use App\Models\User;
 
-
 class HotelPolicy
 {
     /**
@@ -21,13 +20,12 @@ class HotelPolicy
      */
     public function view(User $user, Hotel $hotel): bool
     {
-        return $user->hasPermission('view_hotel')
-            &&(
+        return $user->hasPermission('view_hotels')
+            && (
                 $user->id === $hotel->owner_id
-                || $user->hasRole('super_admin')    
+                || $user->hasRole('super_admin')
                 || $user->hasRole('admin')
-            )
-        ;
+            );
     }
 
     /**
@@ -35,7 +33,7 @@ class HotelPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->hasPermission('create_hotel');
     }
 
     /**
@@ -43,30 +41,38 @@ class HotelPolicy
      */
     public function update(User $user, Hotel $hotel): bool
     {
-        return $user->hasPermission('update_hotel') 
-        &&(
-            $user->id === $hotel->owner_id
-            || $user->hasRole('super_admin')
-            || $user->hasRole('admin')
-        );
+        return $user->hasPermission('update_hotel')
+            && (
+                $user->id === $hotel->owner_id
+                || $user->hasRole('super_admin')
+                || $user->hasRole('admin')
+            );
     }
 
-    public function activate(User $user, Hotel $hotel):bool{
+    /**
+     * Determine whether the user can activate the model.
+     */
+    public function activate(User $user, Hotel $hotel): bool
+    {
         return $user->hasPermission('activate_hotel')
-        &&(
-            $user->id === $hotel->owner_id
-            || $user->hasRole('admin')
-            || $user->hasRole('super_admin')
-        );
+            && (
+                $user->id === $hotel->owner_id
+                || $user->hasRole('admin')
+                || $user->hasRole('super_admin')
+            );
     }
 
-    public function deactivate(User $user, Hotel $hotel):bool{
+    /**
+     * Determine whether the user can deactivate the model.
+     */
+    public function deactivate(User $user, Hotel $hotel): bool
+    {
         return $user->hasPermission('deactivate_hotel')
-        &&(
-            $user->id === $hotel->owner_id
-            || $user->hasRole('admin')
-            || $user->hasRole('super_admin')
-        );
+            && (
+                $user->id === $hotel->owner_id
+                || $user->hasRole('admin')
+                || $user->hasRole('super_admin')
+            );
     }
 
     /**

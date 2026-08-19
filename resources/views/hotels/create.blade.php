@@ -8,7 +8,7 @@
         </div>
 
         <form 
-            action="{{ route('hotels.store') }}" 
+            action="{{ route('owner.hotels.store') }}" 
             method="POST" 
             class="hotel-form"
             enctype="multipart/form-data">

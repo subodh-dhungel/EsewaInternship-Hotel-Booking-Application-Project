@@ -8,7 +8,7 @@
         </div>
 
         <form 
-            action="{{ route('hotel.update', $hotel->id) }}" 
+            action="{{ route('owner.hotels.update', $hotel->id) }}" 
             method="POST" 
             class="hotel-form"
             enctype="multipart/form-data">

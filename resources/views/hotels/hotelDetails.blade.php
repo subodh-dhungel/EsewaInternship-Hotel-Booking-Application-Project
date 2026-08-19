@@ -1,181 +1,366 @@
 <x-layout>
 
-    <div class="Hoteldescription card">
+    <main class="page-container">
 
-        <h1>Hotel Description</h1>
+        {{-- =====================================================
+             PAGE HEADER
+             ===================================================== --}}
 
-        <p>
-            <strong>Name : </strong>
-            {{ $hotel->name }}
-        </p>
+        <div class="page-header">
 
-        <p>
-            <strong>Description : </strong>
-            {{ $hotel->description }}
-        </p>
+            <div>
 
-        <p>
-            <strong>Address : </strong>
-            {{ $hotel->address }},
-            {{ $hotel->city }},
-            {{ $hotel->district }},
-            {{ $hotel->country }}
-        </p>
+                <h1>{{ $hotel->name }}</h1>
 
-        <p>
-            <strong>GPS Coordinates : </strong>
-            {{ $hotel->latitude }} °N
-            {{ $hotel->longitude }} °E
-        </p>
-
-
-        {{-- Rating --}}
-        <div class="rating">
-
-            <p class="text">Rating:</p>
-
-            <div class="stars">
-
-                <span class="stars-empty">
-                    ★★★★★
-                </span>
-
-                <span
-                    class="stars-filled"
-                    style="width: {{ ($hotel->star_rating / 5) * 100 }}%;"
-                >
-                    ★★★★★
-                </span>
+                <p>
+                    Hotel information and image management.
+                </p>
 
             </div>
 
-            <span class="rating-number">
-                {{ number_format($hotel->star_rating, 1) }}
-            </span>
 
-        </div>
+            <div class="page-header-actions">
 
-
-        <p>
-            <strong>Phone : </strong>
-            {{ $hotel->phone }}
-        </p>
-
-        <p>
-            <strong>Email : </strong>
-            {{ $hotel->email }}
-        </p>
-
-        <p>
-            <strong>Check-in time : </strong>
-            {{ $hotel->checkin_time }}
-        </p>
-
-        <p>
-            <strong>Check-out time : </strong>
-            {{ $hotel->check_out_time }}
-        </p>
-
-        <p>
-            <strong>Listing date : </strong>
-            {{ $hotel->created_at }}
-        </p>
-
-
-        {{-- =========================================
-             HOTEL GALLERY
-             ========================================= --}}
-
-        <h2>Hotel Gallery</h2>
-
-
-        {{-- Image Upload --}}
-        <div class="hotel-image-upload">
-
-            <form
-                action="{{ route('hotel-images.store', $hotel) }}"
-                method="POST"
-                enctype="multipart/form-data"
-                class="image-upload-form"
-            >
-
-                @csrf
-
-                <input
-                    class="input"
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    required
-                >
-
-                <button
+                <a
+                    href="{{ route('hotels.index') }}"
                     class="btn"
-                    type="submit"
                 >
-                    Upload Image
-                </button>
+                    Back to Hotels
+                </a>
 
-            </form>
+                <a
+                    href="{{ route('rooms.index', $hotel) }}"
+                    class="btn"
+                >
+                    Manage Rooms
+                </a>
+
+            </div>
 
         </div>
 
 
-        {{-- =========================================
-             GALLERY IMAGES
-             ========================================= --}}
+        {{-- =====================================================
+             HOTEL INFORMATION
+             ===================================================== --}}
 
-        @if ($hotel->image->isEmpty())
+        <section class="details-section">
 
-            <p class="empty-gallery">
-                There are no hotel images to show here.
-            </p>
+            <div class="section-header">
 
-        @else
+                <div>
 
-            {{-- THIS IS THE GRID CONTAINER --}}
-            <div class="hotel-gallery">
+                    <h2>Hotel Information</h2>
 
-                @foreach ($hotel->image as $image)
+                    <p>
+                        Basic information about this hotel.
+                    </p>
 
-                    {{-- ONE GRID ITEM --}}
-                    <div class="gallery-item">
+                </div>
 
-                        {{-- Image --}}
-                        <img
-                            src="{{ asset('storage/' . $image->image) }}"
-                            alt="{{ $hotel->name }}"
-                        >
+            </div>
 
 
-                        {{-- Delete --}}
-                        <form
-                            action="{{ route('hotel-image.destroy', $image) }}"
-                            method="POST"
-                            class="delete-image-form"
-                        >
+            <div class="card hotel-details-card">
 
-                            @csrf
+                <div class="details-grid">
 
-                            @method('DELETE')
+                    <div class="detail-item">
 
-                            <button
-                                type="submit"
-                                class="btn btn-alert"
-                            >
-                                Delete
-                            </button>
+                        <span class="detail-label">
+                            Hotel Name
+                        </span>
 
-                        </form>
+                        <span class="detail-value">
+                            {{ $hotel->name }}
+                        </span>
 
                     </div>
 
-                @endforeach
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Rating
+                        </span>
+
+                        <div class="rating">
+
+                            <div class="stars">
+
+                                <span class="stars-empty">
+                                    ★★★★★
+                                </span>
+
+                                <span
+                                    class="stars-filled"
+                                    style="width: {{ ($hotel->star_rating / 5) * 100 }}%;"
+                                >
+                                    ★★★★★
+                                </span>
+
+                            </div>
+
+                            <span class="rating-number">
+                                {{ number_format($hotel->star_rating, 1) }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item detail-full">
+
+                        <span class="detail-label">
+                            Description
+                        </span>
+
+                        <p class="detail-value">
+                            {{ $hotel->description }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail-item detail-full">
+
+                        <span class="detail-label">
+                            Address
+                        </span>
+
+                        <span class="detail-value">
+
+                            {{ $hotel->address }},
+                            {{ $hotel->city }},
+                            {{ $hotel->district }},
+                            {{ $hotel->country }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            GPS Coordinates
+                        </span>
+
+                        <span class="detail-value">
+
+                            @if ($hotel->latitude && $hotel->longitude)
+
+                                {{ $hotel->latitude }}° N,
+                                {{ $hotel->longitude }}° E
+
+                            @else
+
+                                Not provided
+
+                            @endif
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Phone
+                        </span>
+
+                        <span class="detail-value">
+                            {{ $hotel->phone }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Email
+                        </span>
+
+                        <span class="detail-value">
+                            {{ $hotel->email }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Check-in
+                        </span>
+
+                        <span class="detail-value">
+                            {{ $hotel->checkin_time }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Check-out
+                        </span>
+
+                        <span class="detail-value">
+                            {{ $hotel->check_out_time }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Listed On
+                        </span>
+
+                        <span class="detail-value">
+                            {{ $hotel->created_at }}
+                        </span>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        @endif
+        </section>
 
-    </div>
+
+        {{-- =====================================================
+             HOTEL GALLERY
+             ===================================================== --}}
+
+        <section class="details-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>Hotel Gallery</h2>
+
+                    <p>
+                        Upload and manage images for this hotel.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- IMAGE UPLOAD --}}
+
+            <div class="card image-upload-card">
+
+                <form
+                    action="{{ route('owner.hotel-images.store', $hotel) }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="image-upload-form"
+                >
+
+                    @csrf
+
+                    <div>
+
+                        <label for="hotel-image">
+                            Add Hotel Image
+                        </label>
+
+                        <input
+                            id="hotel-image"
+                            class="input"
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            required
+                        >
+
+                    </div>
+
+                    <button
+                        class="btn"
+                        type="submit"
+                    >
+                        Upload Image
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            {{-- GALLERY --}}
+
+            @if ($hotel->image->isEmpty())
+
+                <div class="empty-state card">
+
+                    <h3>No images yet</h3>
+
+                    <p>
+                        Upload your first hotel image to build the gallery.
+                    </p>
+
+                </div>
+
+            @else
+
+                <div class="hotel-gallery">
+
+                    @foreach ($hotel->image as $image)
+
+                        <div class="gallery-item">
+
+                            <img
+                                src="{{ asset('storage/' . $image->image) }}"
+                                alt="{{ $hotel->name }}"
+                                loading="lazy"
+                            >
+
+
+                            <div class="gallery-item-footer">
+
+                                <form
+                                    action="{{ route('owner.hotel-image.destroy', $image) }}"
+                                    method="POST"
+                                    class="delete-image-form"
+                                >
+
+                                    @csrf
+
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-alert"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    @endforeach
+
+                </div>
+
+            @endif
+
+        </section>
+
+    </main>
 
 </x-layout>

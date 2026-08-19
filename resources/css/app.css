@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.php';
 @source '../../storage/framework/views/*.php';
 
 @theme {
@@ -10,14 +10,18 @@
 }
 
 
-/* =========================================
+/* =========================================================
    GLOBAL
-   ========================================= */
+   ========================================================= */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -28,40 +32,49 @@ body {
 }
 
 main {
-    margin: 0;
     padding-top: 106px;
+    flex-direction: column;
 }
 
 .container {
     width: min(1200px, 92%);
-    margin: auto;
+    margin: 0 auto;
 }
 
 a {
     text-decoration: none;
 }
 
+img {
+    max-width: 100%;
+}
 
-/* =========================================
+
+/* =========================================================
    NAVBAR
-   ========================================= */
+   ========================================================= */
 
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
+
     width: 100%;
     height: 106px;
+
     z-index: 1000;
+
     background: rgba(15, 23, 42, .85);
     backdrop-filter: blur(20px);
 }
 
 .navbar .container {
     height: 100%;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     padding: 0;
 }
 
@@ -87,23 +100,30 @@ nav a,
 }
 
 
-/* =========================================
+/* =========================================================
    BUTTONS
-   ========================================= */
+   ========================================================= */
 
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     padding: 11px 20px;
-    border-radius: 7px;
+
     border: none;
+    border-radius: 7px;
+
     background: #2563eb;
     color: #fff;
+
     font-size: 14px;
     font-weight: 600;
+
     text-decoration: none;
+
     cursor: pointer;
+
     transition: .3s;
 }
 
@@ -129,8 +149,11 @@ nav a,
 .btn-alert {
     background-color: #dc2626;
     color: white;
+
     padding: 8px 14px;
+
     border-radius: 6px;
+
     text-decoration: none;
 }
 
@@ -139,28 +162,51 @@ nav a,
 }
 
 
-/* =========================================
+/* =========================================================
    HEADINGS
-   ========================================= */
+   ========================================================= */
 
 h1,
 h2 {
     text-align: center;
+
     font-size: 2.2rem;
+
     margin-bottom: 45px;
 }
 
 
-/* =========================================
+/* =========================================================
+   GENERIC CARDS
+   ========================================================= */
+
+.card {
+    background: #fff;
+
+    border-radius: 18px;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+
+    padding: 30px;
+
+    text-align: initial;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
    HOTEL GRID
-   ========================================= */
+   ========================================================= */
 
 .destinations,
 .hotel-grid,
 .features,
 .footer-grid {
     display: grid;
+
     padding: 30px;
+
     gap: 24px;
 }
 
@@ -168,30 +214,24 @@ h2 {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| HOTEL GRID
-|--------------------------------------------------------------------------
-| Desktop  -> 3 hotels
-| Tablet   -> 2 hotels
-| Mobile   -> 1 hotel
-*/
-
 .hotel-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 
-/* =========================================
+/* =========================================================
    HOTEL CARD
-   ========================================= */
+   ========================================================= */
 
 .hotel-card {
     background: #fff;
+
     border-radius: 18px;
+
     overflow: hidden;
+
     box-shadow: 0 12px 30px rgba(0, 0, 0, .12);
+
     transition: .3s;
 }
 
@@ -202,6 +242,7 @@ h2 {
 .hotel-card img {
     width: 100%;
     height: 220px;
+
     object-fit: cover;
 }
 
@@ -211,22 +252,27 @@ h2 {
 }
 
 
-/* =========================================
+/* =========================================================
    HOTEL RATING
-   ========================================= */
+   ========================================================= */
 
 .rating {
     display: flex;
     align-items: center;
+
     gap: 8px;
+
     color: #f59e0b;
+
     font-weight: bold;
 }
 
 .stars {
     position: relative;
+
     font-size: 20px;
     line-height: 1;
+
     letter-spacing: 2px;
 }
 
@@ -236,10 +282,14 @@ h2 {
 
 .stars-filled {
     position: absolute;
+
     top: 0;
     left: 0;
+
     overflow: hidden;
+
     white-space: nowrap;
+
     color: #f59e0b;
 }
 
@@ -249,27 +299,33 @@ h2 {
 }
 
 
-/* =========================================
+/* =========================================================
    HOTEL PRICE
-   ========================================= */
+   ========================================================= */
 
 .price-row {
     display: flex;
+
     justify-content: space-between;
     align-items: center;
+
     margin-top: 18px;
 }
 
 
-/* =========================================
+/* =========================================================
    HOTEL ACTIONS
-   ========================================= */
+   ========================================================= */
 
 .hotel-actions {
     display: flex;
+
     flex-direction: column;
+
     gap: 8px;
+
     width: 100%;
+
     margin-top: 15px;
 }
 
@@ -277,6 +333,7 @@ h2 {
 .hotel-actions form,
 .hotel-actions button {
     width: 100%;
+
     box-sizing: border-box;
 }
 
@@ -285,16 +342,20 @@ h2 {
 }
 
 
-/* =========================================
-   GENERIC CARDS
-   ========================================= */
+/* =========================================================
+   DESTINATIONS / FEATURES
+   ========================================================= */
 
 .destination-card,
 .feature {
     background: #fff;
+
     padding: 28px;
+
     border-radius: 18px;
+
     box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+
     transition: .3s;
 }
 
@@ -303,34 +364,30 @@ h2 {
     transform: translateY(-6px);
 }
 
-.card {
-    background: #fff;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .12);
-    padding: 50px;
-    text-align: initial;
-    line-height: 40px;
-    margin: 20px;
-}
 
-
-/* =========================================
+/* =========================================================
    HERO
-   ========================================= */
+   ========================================================= */
 
 .hero {
     height: 100vh;
-    background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80')
+
+    background:
+        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80')
         center / cover no-repeat;
+
     position: relative;
+
     display: flex;
+
     align-items: center;
 }
 
 .overlay {
     position: absolute;
+
     inset: 0;
+
     background: linear-gradient(
         rgba(0, 0, 0, .55),
         rgba(0, 0, 0, .55)
@@ -339,36 +396,48 @@ h2 {
 
 .hero-content {
     position: relative;
+
     color: #fff;
+
     width: 100%;
     max-width: none;
+
     padding-left: 4%;
     padding-right: 4%;
 }
 
 .hero h1 {
     font-size: 4rem;
+
     margin-bottom: 16px;
 }
 
 .hero p {
     font-size: 1.2rem;
+
     margin-bottom: 30px;
+
     max-width: 700px;
 }
 
 
-/* =========================================
+/* =========================================================
    SEARCH
-   ========================================= */
+   ========================================================= */
 
 .search-card {
     display: grid;
+
     grid-template-columns: 2fr repeat(3, 1fr) auto;
+
     gap: 12px;
+
     background: rgba(255, 255, 255, .15);
+
     backdrop-filter: blur(15px);
+
     padding: 20px;
+
     border-radius: 16px;
 }
 
@@ -376,14 +445,19 @@ h2 {
 .search-card select,
 .search-card button {
     padding: 14px;
+
     border: none;
+
     border-radius: 10px;
 }
 
 .search-card button {
     background: #0ea5e9;
+
     color: #fff;
+
     font-weight: bold;
+
     cursor: pointer;
 }
 
@@ -402,9 +476,9 @@ select {
 }
 
 
-/* =========================================
+/* =========================================================
    SECTIONS
-   ========================================= */
+   ========================================================= */
 
 .section {
     padding: 90px 0;
@@ -416,36 +490,52 @@ select {
 
 .cta {
     padding: 80px 0;
-    background: linear-gradient(135deg, #1e3a8a, #0891b2);
+
+    background: linear-gradient(
+        135deg,
+        #1e3a8a,
+        #0891b2
+    );
+
     color: #fff;
+
     text-align: center;
 }
 
 .large {
     padding: 15px 28px;
+
     font-size: 1.05rem;
+
     margin-top: 20px;
 }
 
 
-/* =========================================
+/* =========================================================
    FOOTER
-   ========================================= */
+   ========================================================= */
 
 footer {
     background: #0f172a;
+
     color: #cbd5e1;
+
     padding: 60px 0 20px;
 }
 
 .footer-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
+
     margin-bottom: 30px;
 }
 
 footer h3,
 footer h4 {
     color: #fff;
+
     margin-bottom: 12px;
 }
 
@@ -455,39 +545,51 @@ footer a {
 
 .copyright {
     text-align: center;
+
     border-top: 1px solid #334155;
+
     padding-top: 20px;
 }
 
 
-/* =========================================
+/* =========================================================
    AUTHENTICATION
-   ========================================= */
+   ========================================================= */
 
 .auth-page {
     min-height: calc(100vh - 106px);
+
     display: flex;
+
     justify-content: center;
     align-items: center;
+
     padding: 40px 20px;
 }
 
 .auth-card {
     width: 100%;
+
     max-width: 450px;
+
     background: #fff;
+
     padding: 40px;
+
     border-radius: 18px;
+
     box-shadow: 0 12px 35px rgba(0, 0, 0, .12);
 }
 
 .auth-header {
     text-align: center;
+
     margin-bottom: 30px;
 }
 
 .auth-header h1 {
     font-size: 2rem;
+
     margin-bottom: 8px;
 }
 
@@ -501,17 +603,24 @@ footer a {
 
 .form-group label {
     display: block;
+
     margin-bottom: 8px;
+
     font-weight: 600;
 }
 
 .form-group input[type="email"],
 .form-group input[type="password"] {
     width: 100%;
+
     padding: 13px 14px;
+
     border: 1px solid #d1d5db;
+
     border-radius: 9px;
+
     font-size: 15px;
+
     outline: none;
 }
 
@@ -521,34 +630,49 @@ footer a {
 
 .form-options {
     display: flex;
+
     justify-content: space-between;
     align-items: center;
+
     margin-bottom: 20px;
+
     font-size: 14px;
 }
 
 .remember {
     display: flex;
+
     align-items: center;
+
     gap: 7px;
 }
 
 .form-options a,
 .register-link a {
     color: #2563eb;
+
     font-weight: 600;
 }
 
 .login-btn {
     width: 100%;
+
     border: none;
+
     padding: 13px;
+
     border-radius: 9px;
+
     background: #2563eb;
+
     color: white;
+
     font-size: 16px;
+
     font-weight: 600;
+
     cursor: pointer;
+
     transition: .2s;
 }
 
@@ -558,41 +682,55 @@ footer a {
 
 .error {
     display: block;
+
     margin-top: 6px;
+
     color: #dc2626;
+
     font-size: 13px;
 }
 
 .login-error {
     background: #fee2e2;
+
     color: #b91c1c;
+
     padding: 10px 12px;
+
     border-radius: 8px;
+
     margin-bottom: 15px;
+
     font-size: 14px;
 }
 
 .register-link {
     text-align: center;
+
     margin-top: 25px;
+
     padding-top: 20px;
+
     border-top: 1px solid #e5e7eb;
 }
 
 .register-link p {
     color: #64748b;
+
     font-size: 14px;
 }
 
 
-/* =========================================
+/* =========================================================
    HOTEL CREATE / EDIT
-   ========================================= */
+   ========================================================= */
 
 .hotel-create-page {
-    max-width: 1100px;
+    width: min(1100px, 92%);
+
     margin: 40px auto;
-    padding: 0 20px;
+
+    padding: 0;
 }
 
 .hotel-create-header {
@@ -601,22 +739,31 @@ footer a {
 
 .hotel-create-header h1 {
     margin: 0 0 8px;
+
     font-size: 32px;
+
     font-weight: 700;
+
     color: #222;
 }
 
 .hotel-create-header p {
     margin: 0;
+
     color: #666;
+
     font-size: 15px;
 }
 
 .hotel-form {
     background: #fff;
+
     border: 1px solid #e5e5e5;
+
     border-radius: 12px;
+
     padding: 30px;
+
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
@@ -630,31 +777,41 @@ footer a {
 
 .form-section-title {
     margin-bottom: 18px;
+
     padding-bottom: 10px;
+
     border-bottom: 1px solid #eee;
 }
 
 .form-section-title h2 {
     margin: 0;
+
     font-size: 20px;
+
     font-weight: 600;
+
     color: #333;
 }
 
 .form-section-title p {
     margin: 5px 0 0;
+
     font-size: 13px;
+
     color: #777;
 }
 
 .form-grid {
     display: grid;
+
     grid-template-columns: repeat(2, 1fr);
+
     gap: 20px;
 }
 
 .form-group {
     display: flex;
+
     flex-direction: column;
 }
 
@@ -664,8 +821,11 @@ footer a {
 
 .form-group label {
     margin-bottom: 7px;
+
     font-size: 14px;
+
     font-weight: 600;
+
     color: #333;
 }
 
@@ -673,76 +833,1193 @@ footer a {
 .form-group textarea,
 .form-group select {
     width: 100%;
+
     box-sizing: border-box;
+
     padding: 11px 13px;
+
     border: 1px solid #d8d8d8;
+
     border-radius: 7px;
+
     font-size: 14px;
+
     font-family: inherit;
+
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
     border-color: #333;
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.06);
 }
 
 .form-group textarea {
     min-height: 130px;
+
     resize: vertical;
 }
 
 .form-help {
     margin-top: 5px;
+
     font-size: 12px;
+
     color: #888;
 }
 
 .error-message {
     margin-top: 5px;
+
     font-size: 12px;
+
     color: #d93025;
 }
 
 .form-actions {
     display: flex;
+
     justify-content: flex-end;
+
     gap: 12px;
+
     margin-top: 30px;
+
     padding-top: 20px;
+
     border-top: 1px solid #eee;
 }
 
 .alert-success {
     margin-bottom: 20px;
+
     padding: 12px 15px;
+
     border-radius: 7px;
+
     background: #eaf7ee;
+
     color: #24733a;
+
     font-size: 14px;
 }
 
 .validation-errors {
     margin-bottom: 25px;
+
     padding: 15px;
+
     border-radius: 7px;
+
     background: #fff1f1;
+
     border: 1px solid #ffd0d0;
+
     color: #b42318;
 }
 
 .validation-errors ul {
     margin: 0;
+
     padding-left: 20px;
 }
 
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
+/* =========================================================
+   HOTEL DETAILS PAGE
+   ========================================================= */
+
+.page-container {
+    width: min(1200px, 92%);
+
+    margin: 0 auto;
+
+    padding-top: 40px;
+
+    padding-bottom: 80px;
+}
+
+
+/* =========================================================
+   HOTEL DETAILS HEADER
+   ========================================================= */
+
+.page-container > .page-header {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    margin-bottom: 40px;
+
+    text-align: center;
+}
+
+.page-container > .page-header > div:first-child {
+    text-align: center;
+}
+
+.page-container > .page-header h1 {
+    margin: 0 0 8px;
+
+    font-size: 2.3rem;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    color: #0f172a;
+}
+
+.page-container > .page-header p {
+    margin: 0;
+
+    font-size: 15px;
+
+    text-align: center;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   HOTEL DETAILS HEADER ACTIONS
+   ========================================================= */
+
+.page-container .page-header-actions {
+    position: absolute;
+
+    right: 0;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   DETAILS SECTION CARD
+   ========================================================= */
+
+.details-section {
+    width: 100%;
+
+    margin: 0 0 30px;
+
+    padding: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.details-section:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   DETAILS SECTION HEADER
+   ========================================================= */
+
+.details-section > .section-header {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    margin: 0 0 30px;
+
+    padding-bottom: 20px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.details-section > .section-header > div {
+    width: 100%;
+
+    text-align: center;
+}
+
+.details-section > .section-header h2 {
+    margin: 0 0 6px;
+
+    font-size: 1.5rem;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    color: #0f172a;
+}
+
+.details-section > .section-header p {
+    margin: 0;
+
+    font-size: 14px;
+
+    text-align: center;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   HOTEL INFORMATION CARD
+   ========================================================= */
+
+.hotel-details-card {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 30px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    box-shadow: none;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   DETAILS GRID
+   ========================================================= */
+
+.details-grid {
+    display: grid;
+
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    );
+
+    gap: 24px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   DETAIL ITEM
+   ========================================================= */
+
+.detail-item {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 15px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+.detail-full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   DETAIL LABEL
+   ========================================================= */
+
+.detail-label {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   DETAIL VALUE
+   ========================================================= */
+
+.detail-value {
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #1e293b;
+
+    word-break: break-word;
+}
+
+.detail-item p.detail-value {
+    margin: 0;
+
+    font-weight: 400;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   HOTEL DETAILS RATING
+   ========================================================= */
+
+.detail-item .rating {
+    justify-content: center;
+}
+
+
+/* =========================================================
+   HOTEL IMAGE UPLOAD
+   ========================================================= */
+
+.image-upload-card {
+    width: 100%;
+
+    margin: 0 0 30px;
+
+    padding: 25px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    box-shadow: none;
+}
+
+.image-upload-form {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: center;
+
+    gap: 20px;
+
+    width: 100%;
+}
+
+.image-upload-form > div {
+    flex: 1;
+
+    max-width: 500px;
+}
+
+.image-upload-form label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-align: center;
+
+    color: #374151;
+}
+
+.image-upload-form .input {
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid #d8d8d8;
+
+    border-radius: 7px;
+
+    background: #fff;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   HOTEL GALLERY
+   ========================================================= */
+
+.hotel-gallery {
+    display: grid;
+
+    grid-template-columns: repeat(
+        3,
+        minmax(0, 1fr)
+    );
+
+    gap: 24px;
+
+    width: 100%;
+
+    margin: 0;
+}
+
+.gallery-item {
+    width: 100%;
+
+    margin: 0;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.gallery-item img {
+    display: block;
+
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: cover;
+
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   GALLERY FOOTER
+   ========================================================= */
+
+.gallery-item-footer {
+    padding: 14px;
+
+    text-align: center;
+
+    border-top: 1px solid #e5e7eb;
+
+    background: #fafafa;
+}
+
+.delete-image-form {
+    width: 100%;
+
+    margin: 0;
+}
+
+.delete-image-form .btn-alert {
+    display: block;
+
+    width: 100%;
+
+    border: none;
+
+    cursor: pointer;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   HOTEL DETAILS EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    background: #fff;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 14px;
+
+    padding: 70px 30px;
+
+    text-align: center;
+}
+
+.details-section .empty-state {
+    width: 100%;
+
+    margin: 0;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   HOTEL LIST PAGE
+   ========================================================= */
+
+.hotel-list-page {
+    width: min(1250px, 92%);
+
+    margin: 0 auto;
+
+    padding: 40px 0 80px;
+}
+
+
+/* =========================================================
+   HOTEL LIST HEADER
+   ========================================================= */
+
+.hotel-list-header {
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+    margin-bottom: 40px;
+
+    text-align: center;
+}
+
+.hotel-list-header > div {
+    text-align: center;
+}
+
+.hotel-list-header h1 {
+    margin: 0 0 8px;
+
+    font-size: 2.4rem;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    color: #0f172a;
+}
+
+.hotel-list-header p {
+    margin: 0;
+
+    font-size: 15px;
+
+    text-align: center;
+
+    color: #64748b;
+}
+
+.hotel-list-header .btn {
+    position: absolute;
+
+    right: 0;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   HOTEL SECTION CARD
+   ========================================================= */
+
+.hotel-section {
+    width: 100%;
+
+    margin: 0 0 30px;
+
+    padding: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.06);
+
+    overflow: hidden;
+}
+
+.hotel-section:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   HOTEL SECTION HEADER
+   ========================================================= */
+
+.hotel-section .section-header {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    width: 100%;
+
+    margin: 0 0 30px;
+
+    padding: 0 0 20px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.hotel-section .section-header > div {
+    width: 100%;
+
+    text-align: center;
+}
+
+.hotel-section .section-header h2 {
+    margin: 0 0 6px;
+
+    font-size: 1.5rem;
+
+    font-weight: 700;
+
+    text-align: center;
+}
+
+.hotel-section .section-header p {
+    margin: 0;
+
+    font-size: 14px;
+
+    text-align: center;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   SECTION COUNT
+   ========================================================= */
+
+.section-count {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 32px;
+
+    height: 32px;
+
+    margin-top: 12px;
+
+    padding: 0 10px;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ACTIVE SECTION
+   ========================================================= */
+
+.active-section-header h2 {
+    color: #15803d;
+}
+
+.active-section-header {
+    border-bottom-color: #bbf7d0 !important;
+}
+
+.active-section-header .section-count {
+    background: #dcfce7;
+
+    color: #15803d;
+}
+
+
+/* =========================================================
+   PENDING SECTION
+   ========================================================= */
+
+.pending-section-header h2 {
+    color: #d97706;
+}
+
+.pending-section-header {
+    border-bottom-color: #fde68a !important;
+}
+
+.pending-section-header .section-count {
+    background: #fef3c7;
+
+    color: #b45309;
+}
+
+
+/* =========================================================
+   INACTIVE SECTION
+   ========================================================= */
+
+.inactive-section-header h2 {
+    color: #6b7280;
+}
+
+.inactive-section-header {
+    border-bottom-color: #d1d5db !important;
+}
+
+.inactive-section-header .section-count {
+    background: #f3f4f6;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   HOTEL GRID INSIDE SECTION
+   ========================================================= */
+
+.hotel-section .hotel-grid {
+    display: grid;
+
+    grid-template-columns: repeat(
+        3,
+        minmax(0, 1fr)
+    );
+
+    gap: 24px;
+
+    width: 100%;
+
+    padding: 0;
+
+    margin: 0;
+}
+
+.hotel-section .hotel-card {
+    width: 100%;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   HOTEL SECTION EMPTY STATE
+   ========================================================= */
+
+.hotel-section .empty-state {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 50px 20px;
+
+    text-align: center;
+
+    background: transparent;
+
+    border: none;
+}
+
+.hotel-section .empty-state h3 {
+    margin: 0 0 8px;
+
+    font-size: 1.1rem;
+
+    font-weight: 600;
+
+    text-align: center;
+
+    color: #374151;
+}
+
+.hotel-section .empty-state p {
+    margin: 0 0 20px;
+
+    text-align: center;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   ROOMS PAGE
+   ========================================================= */
+
+.rooms-page {
+    width: min(1200px, 92%);
+
+    margin: 0 auto;
+
+    padding-top: 40px;
+
+    padding-bottom: 80px;
+}
+
+
+/* =========================================================
+   ROOMS PAGE HEADER
+   ========================================================= */
+
+.rooms-page .page-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 30px;
+
+    margin-bottom: 40px;
+}
+
+.page-header-content {
+    flex: 1;
+}
+
+.breadcrumb {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+    font-size: 14px;
+
+    color: #64748b;
+}
+
+.breadcrumb a {
+    color: #2563eb;
+
+    font-weight: 600;
+}
+
+.rooms-page .page-header h1 {
+    text-align: left;
+
+    font-size: 2.2rem;
+
+    margin: 0 0 8px;
+
+    color: #0f172a;
+}
+
+.page-description {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 15px;
+}
+
+.rooms-page .page-header-actions {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   ROOMS SECTION
+   ========================================================= */
+
+.rooms-section {
+    width: 100%;
+}
+
+.section-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    text-align: left;
+
+    margin: 0;
+
+    font-size: 1.4rem;
+
+    color: #0f172a;
+}
+
+.section-heading p {
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ROOM GRID
+   ========================================================= */
+
+.rooms-grid {
+    display: grid;
+
+    grid-template-columns: repeat(
+        3,
+        minmax(0, 1fr)
+    );
+
+    gap: 24px;
+}
+
+
+/* =========================================================
+   ROOM CARD
+   ========================================================= */
+
+.room-card {
+    background: #fff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, .06);
+
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+.room-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, .10);
+}
+
+
+/* =========================================================
+   ROOM CARD HEADER
+   ========================================================= */
+
+.room-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    padding: 22px;
+
+    border-bottom: 1px solid #eef0f3;
+}
+
+.room-number {
+    margin: 0 0 5px;
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    font-weight: 600;
+}
+
+.room-card-header h3 {
+    margin: 0;
+
+    font-size: 1.2rem;
+
+    color: #0f172a;
+}
+
+
+/* =========================================================
+   ROOM STATUS
+   ========================================================= */
+
+.room-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.room-status-available {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+.room-status-occupied {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+.room-status-maintainance {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+.room-status-inactive {
+    background: #e5e7eb;
+
+    color: #374151;
+}
+
+
+/* =========================================================
+   ROOM CARD BODY
+   ========================================================= */
+
+.room-card-body {
+    padding: 22px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+.room-detail {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.room-detail-label {
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+.room-detail strong {
+    font-size: 14px;
+
+    color: #1e293b;
+}
+
+
+/* =========================================================
+   ROOM CARD ACTIONS
+   ========================================================= */
+
+.room-card-actions {
+    display: flex;
+
+    gap: 10px;
+
+    padding: 18px 22px;
+
+    border-top: 1px solid #eef0f3;
+
+    background: #fafafa;
+}
+
+.room-card-actions .btn {
+    flex: 1;
+}
+
+.room-card-actions form {
+    flex: 1;
+
+    margin: 0;
+}
+
+.room-card-actions form button {
+    width: 100%;
+}
+
+
+/* =========================================================
+   RESPONSIVE - LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1024px) {
+
+    .hotel-list-page {
+        width: min(92%, 900px);
+    }
+
+    .hotel-section .hotel-grid {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+    }
+
+    .rooms-grid {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+    }
+
+    .hotel-gallery {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 900PX
+   ========================================================= */
 
 @media (max-width: 900px) {
 
@@ -756,20 +2033,126 @@ footer a {
 
     .navbar .container {
         flex-direction: column;
+
         gap: 12px;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | HOTEL GRID - TABLET
-    |--------------------------------------------------------------------------
-    */
-
-    .hotel-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .rooms-page .page-header {
+        align-items: flex-start;
     }
+
 }
 
+
+/* =========================================================
+   RESPONSIVE - 768PX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* -------------------------
+       HOTEL LIST
+       ------------------------- */
+
+    .hotel-list-page {
+        width: 92%;
+
+        padding-top: 30px;
+
+        padding-bottom: 60px;
+    }
+
+    .hotel-list-header {
+        flex-direction: column;
+
+        gap: 20px;
+
+        margin-bottom: 30px;
+    }
+
+    .hotel-list-header .btn {
+        position: static;
+    }
+
+    .hotel-list-header h1 {
+        font-size: 2rem;
+    }
+
+    .hotel-section {
+        padding: 22px;
+
+        margin-bottom: 24px;
+    }
+
+    .hotel-section .hotel-grid {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+
+    /* -------------------------
+       HOTEL DETAILS
+       ------------------------- */
+
+    .page-container {
+        width: 92%;
+
+        padding-top: 30px;
+
+        padding-bottom: 60px;
+    }
+
+    .page-container > .page-header {
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .page-container .page-header-actions {
+        position: static;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-full {
+        grid-column: auto;
+    }
+
+
+    /* -------------------------
+       HOTEL CREATE
+       ------------------------- */
+
+    .hotel-create-page {
+        width: 92%;
+
+        margin: 20px auto;
+    }
+
+
+    /* -------------------------
+       ROOMS
+       ------------------------- */
+
+    .rooms-page {
+        width: 92%;
+
+        padding-top: 30px;
+    }
+
+    .room-card-body {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 700PX
+   ========================================================= */
 
 @media (max-width: 700px) {
 
@@ -796,219 +2179,156 @@ footer a {
     .form-actions .btn {
         width: 100%;
     }
+
 }
 
 
+/* =========================================================
+   RESPONSIVE - 600PX
+   ========================================================= */
+
 @media (max-width: 600px) {
 
-    /*
-    |--------------------------------------------------------------------------
-    | HOTEL GRID - MOBILE
-    |--------------------------------------------------------------------------
-    */
+    /* -------------------------
+       HOTEL DETAILS
+       ------------------------- */
 
-    .hotel-grid {
-        grid-template-columns: 1fr;
+    .page-container {
+        width: 94%;
     }
 
-    .hotel-grid {
+    .page-container > .page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .page-container .page-header-actions {
+        width: 100%;
+
+        flex-direction: column;
+    }
+
+    .page-container .page-header-actions .btn {
+        width: 100%;
+    }
+
+    .details-section {
         padding: 20px;
     }
-}
 
-/* =========================================
-   HOTEL IMAGE UPLOAD
-   ========================================= */
-
-.hotel-image-upload {
-    display: flex;
-    justify-content: center;
-    margin: 30px 0 45px;
-}
-
-.image-upload-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-}
-
-.image-upload-form .input {
-    padding: 10px;
-    border: 1px solid #d8d8d8;
-    border-radius: 7px;
-    background: #fff;
-}
-
-
-/* =========================================
-   HOTEL IMAGE UPLOAD
-   ========================================= */
-
-.hotel-image-upload {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 30px 0 45px;
-}
-
-.image-upload-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-}
-
-.image-upload-form .input {
-    padding: 10px;
-    border: 1px solid #d8d8d8;
-    border-radius: 7px;
-    background: #fff;
-    cursor: pointer;
-}
-
-
-/* =========================================
-   HOTEL IMAGE UPLOAD
-   ========================================= */
-
-.hotel-image-upload {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 30px 0 45px;
-}
-
-.image-upload-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-.image-upload-form .input {
-    padding: 10px;
-    border: 1px solid #d8d8d8;
-    border-radius: 7px;
-    background: #fff;
-    cursor: pointer;
-}
-
-/* =========================================
-   HOTEL IMAGE UPLOAD
-   ========================================= */
-
-.hotel-image-upload {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 30px 0 45px;
-}
-
-.image-upload-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-.image-upload-form .input {
-    padding: 10px;
-    border: 1px solid #d8d8d8;
-    border-radius: 7px;
-    background: #fff;
-    cursor: pointer;
-}
-
-
-/* =========================================
-   HOTEL GALLERY
-   ========================================= */
-
-.hotel-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 30px;
-    width: 100%;
-    margin: 30px 0;
-}
-
-.gallery-item {
-    min-width: 0;
-    background: #fff;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.gallery-item img {
-    display: block;
-    width: 100%;
-    height: 220px;
-    object-fit: contain;
-    background: #f5f5f5;
-}
-
-
-/* =========================================
-   DELETE IMAGE
-   ========================================= */
-
-.delete-image-form {
-    display: block;
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-}
-
-.delete-image-form .btn-alert {
-    display: block;
-    width: 100%;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-
-/* =========================================
-   EMPTY GALLERY
-   ========================================= */
-
-.empty-gallery {
-    text-align: center;
-    color: #777;
-    margin: 30px 0;
-}
-
-
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-
-@media (max-width: 900px) {
-
-    .hotel-gallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .hotel-details-card {
+        padding: 15px;
     }
 
-}
-
-
-@media (max-width: 600px) {
-
-    .hotel-gallery {
-        grid-template-columns: 1fr;
+    .image-upload-card {
+        padding: 18px;
     }
 
     .image-upload-form {
         flex-direction: column;
+
+        align-items: center;
+    }
+
+    .image-upload-form > div {
+        width: 100%;
+
+        max-width: none;
+    }
+
+    .image-upload-form .btn {
         width: 100%;
     }
 
-    .image-upload-form .input {
+    .hotel-gallery {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* -------------------------
+       HOTEL GRID
+       ------------------------- */
+
+    .hotel-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* -------------------------
+       ROOMS
+       ------------------------- */
+
+    .rooms-page {
+        width: 94%;
+    }
+
+    .rooms-page .page-header {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 20px;
+    }
+
+    .rooms-page .page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .rooms-page .page-header-actions .btn {
         width: 100%;
+    }
+
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 480PX
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .hotel-list-page {
+        width: 94%;
+    }
+
+    .hotel-list-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .hotel-section {
+        padding: 18px;
+    }
+
+    .hotel-section .section-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .room-card-body {
+        grid-template-columns: 1fr;
+    }
+
+    .room-card-actions {
+        flex-direction: column;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 400PX
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .room-card-body {
+        grid-template-columns: 1fr;
+    }
+
+    .room-card-actions {
+        flex-direction: column;
     }
 
 }

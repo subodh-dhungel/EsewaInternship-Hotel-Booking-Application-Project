@@ -9,6 +9,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class RoomTypes extends Model
 {
+
+    protected $fillable = [
+        'hotel_id',
+        'name',
+        'description',
+        'price',
+        'discount_price',
+        'capacity',
+        'room_size',
+        'total_rooms',
+        'bed_type',
+        'available_rooms',
+        'number_of_rooms',
+    ];
+
     use HasFactory;
     public function hotel() :BelongsTo
     {

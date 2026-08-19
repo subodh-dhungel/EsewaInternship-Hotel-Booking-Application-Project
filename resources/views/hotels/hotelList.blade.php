@@ -1,20 +1,71 @@
 <x-layout>
 
-    <main>
+    <main class="hotel-list-page">
 
-        {{-- ===================================================== --}}
-        {{-- CUSTOMER                                               --}}
-        {{-- ===================================================== --}}
+        {{-- =====================================================
+             PAGE HEADER
+        ====================================================== --}}
 
-        @if (auth()->user()->hasRole('customer'))
+        <div class="page-header hotel-list-header">
 
-            <h1>Hotels</h1>
+            <div class="hotel-list-header-content">
+
+                <h1>Hotels</h1>
+
+                <p>
+                    Find the perfect hotel for your stay.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+             AVAILABLE HOTELS
+        ====================================================== --}}
+
+        <section class="hotel-section card">
+
+            {{-- Section Header --}}
+
+            <div class="section-header active-section-header">
+
+                <div>
+
+                    <h2>Available Hotels</h2>
+
+                    <p>
+                        Browse hotels currently available for booking.
+                    </p>
+
+                </div>
+
+                <span class="section-count">
+                    {{ $hotels->count() }}
+                </span>
+
+            </div>
+
+
+            {{-- =================================================
+                 HOTEL LIST
+            ================================================== --}}
 
             @if ($hotels->isEmpty())
 
-                <p>
-                    There are no hotels available.
-                </p>
+                <div class="empty-state">
+
+                    <h3>
+                        No hotels available
+                    </h3>
+
+                    <p>
+                        There are currently no hotels available for booking.
+                        Please check again later.
+                    </p>
+
+                </div>
 
             @else
 
@@ -33,104 +84,7 @@
 
             @endif
 
-
-        {{-- ===================================================== --}}
-        {{-- HOTEL OWNER                                            --}}
-        {{-- ===================================================== --}}
-
-        @elseif (auth()->user()->hasRole('hotel_owner'))
-
-
-            {{-- ================================================= --}}
-            {{-- ACTIVE HOTELS                                      --}}
-            {{-- ================================================= --}}
-
-            <h1>My Active Hotels</h1>
-
-            @if ($activeHotels->isEmpty())
-
-                <p>
-                    You don't have any active hotels.
-                </p>
-
-            @else
-
-                <div class="hotel-grid">
-
-                    @foreach ($activeHotels as $hotel)
-
-                        <x-hotel-card
-                            :hotel="$hotel"
-                            status="active"
-                        />
-
-                    @endforeach
-
-                </div>
-
-            @endif
-
-
-            {{-- ================================================= --}}
-            {{-- PENDING HOTELS                                     --}}
-            {{-- ================================================= --}}
-
-            <h1>My Pending Hotels</h1>
-
-            @if ($pendingHotels->isEmpty())
-
-                <p>
-                    You don't have any pending hotels.
-                </p>
-
-            @else
-
-                <div class="hotel-grid">
-
-                    @foreach ($pendingHotels as $hotel)
-
-                        <x-hotel-card
-                            :hotel="$hotel"
-                            status="pending"
-                        />
-
-                    @endforeach
-
-                </div>
-
-            @endif
-
-
-            {{-- ================================================= --}}
-            {{-- INACTIVE HOTELS                                    --}}
-            {{-- ================================================= --}}
-
-            <h1>My Inactive Hotels</h1>
-
-            @if ($inactiveHotels->isEmpty())
-
-                <p>
-                    You don't have any inactive hotels.
-                </p>
-
-            @else
-
-                <div class="hotel-grid">
-
-                    @foreach ($inactiveHotels as $hotel)
-
-                        <x-hotel-card
-                            :hotel="$hotel"
-                            status="inactive"
-                        />
-
-                    @endforeach
-
-                </div>
-
-            @endif
-
-        @endif
+        </section>
 
     </main>
 
