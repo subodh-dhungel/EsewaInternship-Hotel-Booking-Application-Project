@@ -1,4 +1,4 @@
-<x-layout>
+<x-owner-layout>
 
     <div class="hotel-create-page">
 
@@ -150,4 +150,4 @@
 
     </div>
 
-</x-layout>
+</x-owner-layout>

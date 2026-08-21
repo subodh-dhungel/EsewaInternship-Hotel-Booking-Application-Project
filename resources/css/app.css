@@ -1,36 +1,28 @@
 @import 'tailwindcss';
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.php';
 @source '../../storage/framework/views/*.php';
-
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 }
-
-
 /* =========================================================
    GLOBAL
    ========================================================= */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 html {
     scroll-behavior: smooth;
 }
-
 body {
     font-family: "Manrope", sans-serif;
     background: #f5f7fb;
     color: #222;
     line-height: 1.6;
 }
-
 main {
     padding-top: 106px;
     flex-direction: column;
@@ -225,13 +217,9 @@ h2 {
 
 .hotel-card {
     background: #fff;
-
     border-radius: 18px;
-
     overflow: hidden;
-
     box-shadow: 0 12px 30px rgba(0, 0, 0, .12);
-
     transition: .3s;
 }
 
@@ -259,20 +247,15 @@ h2 {
 .rating {
     display: flex;
     align-items: center;
-
     gap: 8px;
-
     color: #f59e0b;
-
     font-weight: bold;
 }
 
 .stars {
     position: relative;
-
     font-size: 20px;
     line-height: 1;
-
     letter-spacing: 2px;
 }
 
@@ -2329,6 +2312,349 @@ footer a {
 
     .room-card-actions {
         flex-direction: column;
+    }
+
+}
+
+/* ========================================
+   OWNER LAYOUT
+======================================== */
+
+.owner-layout {
+    min-height: 100vh;
+    display: flex;
+    background: #f5f7f9;
+}
+
+
+/* ========================================
+   SIDEBAR
+======================================== */
+
+.owner-sidebar {
+    width: 250px;
+    min-height: 100vh;
+
+    background: #202020;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+
+/* ========================================
+   LOGO
+======================================== */
+
+.owner-sidebar-logo {
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 25px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.owner-sidebar-logo img {
+    width: 125px;
+    height: auto;
+}
+
+
+/* ========================================
+   NAVIGATION
+======================================== */
+
+.owner-sidebar-nav {
+    padding: 25px 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.owner-nav-item {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 13px 15px;
+
+    color: #d1d5db;
+
+    text-decoration: none;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.owner-nav-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+
+/* ========================================
+   ICONS
+======================================== */
+
+.owner-nav-icon {
+    width: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+
+    color: #aeb4ba;
+}
+
+.owner-nav-item:hover .owner-nav-icon {
+    color: #00a86b;
+}
+
+
+/* ========================================
+   ACTIVE NAVIGATION
+======================================== */
+
+.owner-nav-item.active {
+    background: #00a86b;
+    color: white;
+}
+
+.owner-nav-item.active .owner-nav-icon {
+    color: white;
+}
+
+
+/* ========================================
+   BOTTOM NAVIGATION
+======================================== */
+
+.owner-sidebar-bottom {
+    margin-top: auto;
+
+    padding: 15px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+/* ========================================
+   LOGOUT
+======================================== */
+
+.owner-logout:hover {
+    background: rgba(220, 38, 38, 0.15);
+    color: #f87171;
+}
+
+.owner-logout:hover .owner-nav-icon {
+    color: #f87171;
+}
+
+
+/* ========================================
+   MAIN AREA
+======================================== */
+
+.owner-main {
+    width: calc(100% - 250px);
+
+    margin-left: 250px;
+
+    min-height: 100vh;
+}
+
+
+/* ========================================
+   TOP BAR
+======================================== */
+
+.owner-topbar {
+    height: 80px;
+
+    background: white;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+}
+
+
+.owner-page-title h1 {
+    margin: 0;
+
+    font-size: 20px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+
+/* ========================================
+   USER AREA
+======================================== */
+
+.owner-user {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.owner-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    background: #00a86b;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.owner-user-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.owner-user-name {
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+
+.owner-user-role {
+    font-size: 12px;
+
+    color: #6b7280;
+}
+
+
+/* ========================================
+   PAGE CONTENT
+======================================== */
+
+.owner-content {
+    padding: 35px;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 900px) {
+
+    .owner-sidebar {
+        width: 210px;
+    }
+
+    .owner-main {
+        width: calc(100% - 210px);
+        margin-left: 210px;
+    }
+
+    .owner-sidebar-logo {
+        padding: 0 20px;
+    }
+
+    .owner-nav-item {
+        padding: 12px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .owner-sidebar {
+        width: 70px;
+    }
+
+    .owner-sidebar-logo {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .owner-sidebar-logo img {
+        width: 42px;
+        object-fit: cover;
+        object-position: left;
+    }
+
+    .owner-nav-item {
+        justify-content: center;
+        padding: 13px 0;
+    }
+
+    .owner-nav-item span:last-child {
+        display: none;
+    }
+
+    .owner-nav-icon {
+        font-size: 18px;
+    }
+
+    .owner-main {
+        width: calc(100% - 70px);
+        margin-left: 70px;
+    }
+
+    .owner-topbar {
+        padding: 0 20px;
+    }
+
+    .owner-user-info {
+        display: none;
+    }
+
+    .owner-content {
+        padding: 20px;
     }
 
 }

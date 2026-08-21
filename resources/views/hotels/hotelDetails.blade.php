@@ -1,4 +1,4 @@
-<x-layout>
+<x-owner-layout>
 
     <main class="page-container">
 
@@ -363,4 +363,4 @@
 
     </main>
 
-</x-layout>
+</x-owner-layout>

@@ -60,12 +60,18 @@ class AuthController extends Controller
         // User le remember ma click gareko case ma
         $remember = $request->boolean('remember');
         if(Auth::attempt($credentials, $remember)){
+            $user = Auth::user();
+            $role =$user->roles->first()->name;
 
             // login garepachi session regenerate garne
             $request->session()->regenerate();
-
+            
             // redirect users to the homepage
-            return redirect()->intended(route('hotels.featured'));
+            if($role === 'customer'){
+                return redirect()->intended(route('hotels.featured'));
+            }else if($role === 'hotel_owner'){
+                return redirect()->intended(route('owner.index'));
+            }
 
         }
 

@@ -2,10 +2,6 @@
 
     <main class="hotel-list-page">
 
-        {{-- =====================================================
-             PAGE HEADER
-        ====================================================== --}}
-
         <div class="page-header hotel-list-header">
 
             <div class="hotel-list-header-content">
@@ -21,13 +17,7 @@
         </div>
 
 
-        {{-- =====================================================
-             AVAILABLE HOTELS
-        ====================================================== --}}
-
         <section class="hotel-section card">
-
-            {{-- Section Header --}}
 
             <div class="section-header active-section-header">
 
@@ -46,11 +36,6 @@
                 </span>
 
             </div>
-
-
-            {{-- =================================================
-                 HOTEL LIST
-            ================================================== --}}
 
             @if ($hotels->isEmpty())
 

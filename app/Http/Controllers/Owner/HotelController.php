@@ -8,6 +8,7 @@ use App\Models\RoomTypes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -42,6 +43,11 @@ class HotelController extends Controller
         ]);
     }
 
+    public function dashboard()
+    {
+        return view('hotels.ownerDashboard');
+    }
+
 
     /**
      * Show the form for creating a new hotel.
@@ -57,6 +63,11 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info('HOTEL STORE CALLED', [
+            'time' => now()->toDateTimeString(),
+            'user_id' => Auth::id(),
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -82,7 +93,6 @@ class HotelController extends Controller
 
         $originalSlug = $slug;
         $count = 1;
-
         while (Hotel::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $count;
             $count++;
@@ -111,12 +121,12 @@ class HotelController extends Controller
             'name' => 'Standard Room',
             'description' => 'Standard room at this hotel',
             'price' => $price,
-            'discount_price'=>200,
-            'capacity'=> 2,
+            'discount_price' => 200,
+            'capacity' => 2,
             'bed_type' => 'king',
             'room_size' => 100,
-            'total_rooms'=>10,
-            'available_rooms'=> 9,
+            'total_rooms' => 10,
+            'available_rooms' => 9,
         ]);
 
         return redirect()
@@ -146,10 +156,8 @@ class HotelController extends Controller
     public function edit(Hotel $hotel)
     {
         Gate::authorize('update', $hotel);
-
         $price = RoomTypes::where('hotel_id', $hotel->id)
             ->value('price');
-
         return view('hotels.edit', [
             'hotel' => $hotel,
             'price' => $price,

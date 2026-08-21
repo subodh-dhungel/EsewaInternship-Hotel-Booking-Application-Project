@@ -1,4 +1,4 @@
-<x-layout>
+<x-owner-layout>
 
     <main class="hotel-list-page">
 
@@ -170,4 +170,4 @@
 
     </main>
 
-</x-layout>
+</x-owner-layout>
