@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Hotel Room Routes
@@ -32,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/hotels/{hotel}/rooms/{room}/edit', [RoomController::class, 'edit'])
         ->name('rooms.edit')
         ->middleware('permission:update_room');
+
 
     // Update room
     Route::put('/hotels/{hotel}/rooms/{room}', [RoomController::class, 'update'])

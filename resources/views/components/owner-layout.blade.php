@@ -23,10 +23,7 @@
             <div class="owner-sidebar-logo">
 
                 <a href="{{ route('owner.hotels.index') }}">
-                    <img
-                        src="https://esewahotels.com/images/esewa_hotel_logo_white.svg"
-                        alt="eSewa Hotels"
-                    >
+                    <img src="https://esewahotels.com/images/esewa_hotel_logo_white.svg" alt="eSewa Hotels">
                 </a>
 
             </div>
@@ -35,15 +32,12 @@
             <!-- Navigation -->
             <nav class="owner-sidebar-nav">
 
-                <a href="{{route('owner.index')}}" class="owner-nav-item">
+                <a href="{{ route('owner.index') }}" class="owner-nav-item">
                     <span class="owner-nav-icon">▦</span>
                     <span>Dashboard</span>
                 </a>
 
-                <a
-                    href="{{ route('owner.hotels.index') }}"
-                    class="owner-nav-item"
-                >
+                <a href="{{ route('owner.hotels.index') }}" class="owner-nav-item">
                     <span class="owner-nav-icon">⌂</span>
                     <span>My Hotels</span>
                 </a>
@@ -74,10 +68,7 @@
                     <span>Settings</span>
                 </a>
 
-                <a
-                    href="{{ route('user.logout') }}"
-                    class="owner-nav-item owner-logout"
-                >
+                <a href="{{ route('user.logout') }}" class="owner-nav-item owner-logout">
                     <span class="owner-nav-icon">↪</span>
                     <span>Logout</span>
                 </a>

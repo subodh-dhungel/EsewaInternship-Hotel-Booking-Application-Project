@@ -33,10 +33,10 @@ class HotelPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermission('create_hotel');
+        return $user->hasAnyPermission(['create_hotel', 'create_room']);
     }
 
-    /**
+    /*
      * Determine whether the user can update the model.
      */
     public function update(User $user, Hotel $hotel): bool

@@ -57,7 +57,7 @@
 
         {{-- Hotel Name --}}
         <h3>
-            {{ $hotel->name }}
+        <strong>{{ $hotel->name }}</strong>
         </h3>
 
 

@@ -1,4 +1,4 @@
-<x-layout>
+<x-owner-layout>
 
     <main class="rooms-page">
 
@@ -224,4 +224,4 @@
 
     </main>
 
-</x-layout>
+</x-owner-layout>

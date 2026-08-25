@@ -63,11 +63,6 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('HOTEL STORE CALLED', [
-            'time' => now()->toDateTimeString(),
-            'user_id' => Auth::id(),
-        ]);
-
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
