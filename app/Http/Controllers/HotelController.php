@@ -54,7 +54,7 @@ class HotelController extends Controller
             'amenity',
         ]);
 
-        return view('hotels.hotelDetails', [
+        return view('hotels.customerHotelDetails', [
             'hotel' => $hotel,
         ]);
     }

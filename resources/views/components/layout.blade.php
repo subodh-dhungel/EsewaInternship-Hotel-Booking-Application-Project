@@ -17,8 +17,8 @@
             </a>
             
             <nav>
-                <a href="/">Home</a>
-                <a href="/hotels">Hotels</a>
+                <a href="{{route('hotels.featured')}}">Home</a>
+                <a href="{{route('hotels.index')}}">Hotels</a>
                 <a href="/offers">Offers</a>
                 <a href="/about">About</a>
                 <a href="/contact">Contact</a>
