@@ -23,6 +23,7 @@ class Booking extends Model
         'total_price',
         'booking_status',
         'payment_status',
+        'phone_number',
     ];
 
     use HasFactory;

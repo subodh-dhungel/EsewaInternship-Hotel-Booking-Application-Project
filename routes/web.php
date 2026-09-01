@@ -7,6 +7,7 @@ require __DIR__.'/hotel_owner.php';
 require __DIR__.'/room.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/room_types.php';
+require __DIR__.'/customer_booking.php';
 
 
 /*

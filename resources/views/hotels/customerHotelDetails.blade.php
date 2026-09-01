@@ -394,11 +394,13 @@
                             <div class="room-type-actions">
 
                                 @if ($roomType->available_rooms > 0)
-                                    {{-- href="{{ route('bookings.create', [
+                                    <a 
+                                        class="btn btn-primary"
+                                        href="{{ route('bookings.create', [
                                         'hotel' => $hotel->id,
                                         'room_type' => $roomType->id,
-                                    ]) }}" --}}
-                                    <a class="btn btn-primary">
+                                        ]) }}"
+                                    >
                                         Book Now
                                     </a>
                                 @else

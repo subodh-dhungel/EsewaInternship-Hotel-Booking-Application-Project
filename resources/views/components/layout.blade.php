@@ -20,7 +20,7 @@
                 <a href="{{route('hotels.featured')}}">Home</a>
                 <a href="{{route('hotels.index')}}">Hotels</a>
                 <a href="/offers">Offers</a>
-                <a href="/about">About</a>
+                <a href="{{route('bookings.history')}}">My bookings</a>
                 <a href="/contact">Contact</a>
             </nav>
             <div class="auth">
