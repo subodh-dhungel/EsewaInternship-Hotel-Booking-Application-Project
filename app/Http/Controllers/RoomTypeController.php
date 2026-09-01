@@ -11,9 +11,7 @@ class RoomTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {
-        
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -44,16 +42,20 @@ class RoomTypeController extends Controller
                 'lt:price',
             ],
             'total_rooms' => ['required', 'integer', 'min:1'],
-            'available_rooms' => [
-                'required',
-                'integer',
-                'min:0',
-                'lte:total_rooms',
-            ],
         ]);
 
         // hotel lai room type sanga attach garna ko lagi
-        $hotel->roomTypes()->create($validated);
+        $hotel->roomTypes()->create([
+            'available_rooms' => $validated['total_rooms'],
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'capacity' => $validated['capacity'],
+            'bed_type' => $validated['bed_type'],
+            'room_size' => $validated['room_size'],
+            'price' => $validated['price'],
+            'discount_price' => $validated['discount_price'],
+            'total_rooms' => $validated['total_rooms']
+        ]);
 
         return redirect(route('owner.hotels.show', [
             'hotel' => $hotel,
@@ -88,12 +90,12 @@ class RoomTypeController extends Controller
     public function update(Request $request, Hotel $hotel, RoomTypes $room_type)
     {
         // ownership verification
-        $roomType = $hotel->roomTypes()->findOrFail($room_type->id);    
+        $roomType = $hotel->roomTypes()->findOrFail($room_type->id);
 
         // validation
         $validated = $request->validate([
-            'name' => ['nullable','string', 'max:100'],
-            'description' => ['nullable','string'],
+            'name' => ['nullable', 'string', 'max:100'],
+            'description' => ['nullable', 'string'],
             'capacity' => ['nullable', 'integer', 'min:1'],
             'bed_type' => ['nullable', 'string', 'max:50'],
             'room_size' => ['nullable', 'numeric', 'min:0'],
@@ -116,8 +118,9 @@ class RoomTypeController extends Controller
         $room_type->update($validated);
 
         //redirect to the previous page
-        return redirect(route('owner.hotels.show'))
-            ->with('success', 'room type successffully edited');
+        return redirect(route('owner.hotels.show', [
+            'hotel' => $hotel,
+        ]))->with('success', 'room type successfully edited');
     }
 
     /**

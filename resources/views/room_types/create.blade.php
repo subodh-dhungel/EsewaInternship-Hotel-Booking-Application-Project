@@ -355,27 +355,6 @@
 
                     </div>
 
-
-                    {{-- Available Rooms --}}
-
-                    <div class="form-group">
-
-                        <label for="available_rooms">
-                            Available Rooms
-                        </label>
-
-                        <input
-                            type="number"
-                            id="available_rooms"
-                            name="available_rooms"
-                            value="{{ old('available_rooms') }}"
-                            min="0"
-                            placeholder="e.g. 10"
-                            required
-                        >
-
-                    </div>
-
                 </div>
 
             </div>

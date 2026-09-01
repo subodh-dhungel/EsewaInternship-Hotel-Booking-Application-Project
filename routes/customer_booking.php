@@ -8,7 +8,7 @@ Route::middleware(['auth', 'permission:create_booking'])->group(function () {
     Route::get('/hotels/{hotel}/room-types/{room_type}/book', [BookingController::class, 'create'])
         ->name('bookings.create');
 
-    Route::get('/my-bookings', [BookingController::class, 'show'])
+    Route::get('/my-bookings', [BookingController::class, 'index'])
         ->name('bookings.history');
 
     // Booking lai database ma store garna

@@ -16,9 +16,20 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Hotel $hotel, RoomTypes $room_type)
     {
-        //
+        $userId = Auth::user()->id;
+        // get bookings of current user
+        $booking = Booking::where('user_id', $userId)
+            ->with('hotel', 'roomType')
+            ->latest()
+            ->get();
+
+        return view('bookings.history',[
+            'bookings'=>$booking,
+            'hotel'=>$hotel,
+            'room_type'=>$room_type,
+        ]);
     }
 
     /**
@@ -108,7 +119,7 @@ class BookingController extends Controller
 
         // Booking create bhayepachi booking details page ma jane
         return redirect()
-            ->route('bookings.show', $booking)
+            ->route('bookings.history', $booking)
             ->with('success', 'Booking created successfully.');
     }
 
@@ -117,7 +128,6 @@ class BookingController extends Controller
      */
     public function show()
     {
-        return view('bookings.history');
     }
 
     /**
