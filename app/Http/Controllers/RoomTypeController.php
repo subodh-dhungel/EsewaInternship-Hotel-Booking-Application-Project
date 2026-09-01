@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\Room;
 use App\Models\RoomTypes;
 use Illuminate\Http\Request;
 
@@ -41,12 +42,11 @@ class RoomTypeController extends Controller
                 'min:0',
                 'lt:price',
             ],
-            'total_rooms' => ['required', 'integer', 'min:1'],
         ]);
 
         // hotel lai room type sanga attach garna ko lagi
         $hotel->roomTypes()->create([
-            'available_rooms' => $validated['total_rooms'],
+            'available_rooms' => 0,
             'name' => $validated['name'],
             'description' => $validated['description'],
             'capacity' => $validated['capacity'],
@@ -54,7 +54,7 @@ class RoomTypeController extends Controller
             'room_size' => $validated['room_size'],
             'price' => $validated['price'],
             'discount_price' => $validated['discount_price'],
-            'total_rooms' => $validated['total_rooms']
+            'total_rooms' => 0,
         ]);
 
         return redirect(route('owner.hotels.show', [
@@ -105,13 +105,6 @@ class RoomTypeController extends Controller
                 'numeric',
                 'min:0',
                 'lt:price',
-            ],
-            'total_rooms' => ['nullable', 'integer', 'min:1'],
-            'available_rooms' => [
-                'nullable',
-                'integer',
-                'min:0',
-                'lte:total_rooms',
             ],
         ]);
 

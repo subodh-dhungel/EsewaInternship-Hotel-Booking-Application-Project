@@ -30,9 +30,8 @@ class RoomController extends Controller
     }
 
     // Create gareko room lai database ma store garna
-    public function store(Request $request, Hotel $hotel, RoomTypes $room_types)
+    public function store(Request $request, Hotel $hotel)
     {
-        // Form bata aayeko data validate garne
         $validated = $request->validate([
             'room_type_id' => [
                 'required',
@@ -49,32 +48,30 @@ class RoomController extends Controller
                 'string',
                 'max:50',
 
-                // Eutai hotel bhitra same room number huna nadine
                 Rule::unique('rooms', 'room_number')
                     ->where(function ($query) use ($hotel) {
                         $query->where('hotel_id', $hotel->id);
                     }),
             ],
 
-            // Room ko optional name validate garne
             'name' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
 
-            // Room ko status validate garne
             'status' => [
                 'required',
                 Rule::in([
                     'available',
+                    'occupied',
                     'maintenance',
                     'inactive',
                 ]),
             ],
         ]);
 
-        // Form bata aayeko room type id bata actual room type khojne
+        // Form bata aayeko room type khojne
         $roomType = RoomTypes::findOrFail($validated['room_type_id']);
 
         // Room type yo hotel kai ho ki hoina check garne
@@ -86,10 +83,23 @@ class RoomController extends Controller
         // Room ko hotel_id set garne
         $validated['hotel_id'] = $hotel->id;
 
-        // Room type bhitra physical room create garne
+        // Physical room create garne
         $roomType->rooms()->create($validated);
 
-        // Room create bhayepachi agadi ko page ma farkine
+        // Total physical rooms
+        $totalRooms = $roomType->rooms()->count();
+
+        // Only available rooms
+        $availableRooms = $roomType->rooms()
+            ->where('status', 'available')
+            ->count();
+
+        // Room type ko inventory update garne
+        $roomType->update([
+            'total_rooms' => $totalRooms,
+            'available_rooms' => $availableRooms,
+        ]);
+
         return redirect()
             ->back()
             ->with('success', 'Room created successfully.');
@@ -98,7 +108,6 @@ class RoomController extends Controller
     // Edit garna ko lagi room ko existing data dekhaune
     public function edit(Hotel $hotel, Room $room)
     {
-        // Room yo hotel kai ho ki hoina check garne
         abort_unless(
             $room->hotel_id === $hotel->id,
             404
@@ -116,19 +125,19 @@ class RoomController extends Controller
         Hotel $hotel,
         Room $room
     ) {
-        // Room yo hotel kai ho ki hoina check garne
         abort_unless(
             $room->hotel_id === $hotel->id,
             404
         );
 
-        // Form bata aayeko updated data validate garne
+        // Purano room type
+        $oldRoomType = $room->roomType;
+
         $validated = $request->validate([
             'room_type_id' => [
                 'required',
                 'integer',
 
-                // Room type yo hotel kai ho ki hoina check garne
                 Rule::exists('room_types', 'id')
                     ->where(function ($query) use ($hotel) {
                         $query->where('hotel_id', $hotel->id);
@@ -140,8 +149,6 @@ class RoomController extends Controller
                 'string',
                 'max:50',
 
-                // Same hotel bhitra duplicate room number huna nadine
-                // Current room ko room_number chai ignore garne
                 Rule::unique('rooms', 'room_number')
                     ->ignore($room->id)
                     ->where(function ($query) use ($hotel) {
@@ -149,28 +156,57 @@ class RoomController extends Controller
                     }),
             ],
 
-            // Room ko name optional cha
             'name' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
 
-            // Room ko status validate garne
             'status' => [
                 'required',
                 Rule::in([
                     'available',
+                    'occupied',
                     'maintenance',
                     'inactive',
                 ]),
             ],
         ]);
 
-        // Room ko updated data database ma save garne
+        // Room update garne
         $room->update($validated);
 
-        // Update bhayepachi room list ma farkine
+        // Naya room type
+        $newRoomType = $room->roomType;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Purano room type update
+        |--------------------------------------------------------------------------
+        */
+
+        $oldRoomType->update([
+            'total_rooms' => $oldRoomType->rooms()->count(),
+
+            'available_rooms' => $oldRoomType->rooms()
+                ->where('status', 'available')
+                ->count(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Naya room type update
+        |--------------------------------------------------------------------------
+        */
+
+        $newRoomType->update([
+            'total_rooms' => $newRoomType->rooms()->count(),
+
+            'available_rooms' => $newRoomType->rooms()
+                ->where('status', 'available')
+                ->count(),
+        ]);
+
         return redirect()
             ->route('rooms.index', [
                 'hotel' => $hotel,
@@ -181,16 +217,31 @@ class RoomController extends Controller
     // Room lai database bata delete garna
     public function destroy(Hotel $hotel, Room $room)
     {
-        // Room yo hotel kai ho ki hoina check garne
         abort_unless(
             $room->hotel_id === $hotel->id,
             404
         );
 
+        // Delete garnu agadi room type store garne
+        $roomType = $room->roomType;
+
         // Room delete garne
         $room->delete();
 
-        // Delete bhayepachi room list ma farkine
+        // Total physical rooms
+        $totalRooms = $roomType->rooms()->count();
+
+        // Only available rooms
+        $availableRooms = $roomType->rooms()
+            ->where('status', 'available')
+            ->count();
+
+        // Room type inventory update garne
+        $roomType->update([
+            'total_rooms' => $totalRooms,
+            'available_rooms' => $availableRooms,
+        ]);
+
         return redirect()
             ->route('rooms.index', [
                 'hotel' => $hotel,

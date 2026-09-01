@@ -324,50 +324,6 @@
 
             </div>
 
-
-            {{-- =================================================
-                 ROOM INVENTORY
-                 ================================================= --}}
-
-            <div class="form-section">
-
-                <div class="form-section-title">
-
-                    <h2>Room Inventory</h2>
-
-                    <p>
-                        Update the number of physical rooms belonging to this room type.
-                    </p>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    {{-- Total Rooms --}}
-
-                    <div class="form-group">
-
-                        <label for="total_rooms">
-                            Total Rooms
-                        </label>
-
-                        <input
-                            type="number"
-                            id="total_rooms"
-                            name="total_rooms"
-                            value="{{ old('total_rooms', $roomType->total_rooms) }}"
-                            min="1"
-                            placeholder="e.g. 10"
-                            required
-                        >
-
-                    </div>
-                </div>
-
-            </div>
-
-
             {{-- =================================================
                  ACTIONS
                  ================================================= --}}

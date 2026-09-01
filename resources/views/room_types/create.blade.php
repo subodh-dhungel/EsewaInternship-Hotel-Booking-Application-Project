@@ -315,51 +315,6 @@
 
             </div>
 
-
-            {{-- =================================================
-                 ROOM INVENTORY
-                 ================================================= --}}
-
-            <div class="form-section">
-
-                <div class="form-section-title">
-
-                    <h2>Room Inventory</h2>
-
-                    <p>
-                        Tell us how many physical rooms belong to this room type.
-                    </p>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    {{-- Total Rooms --}}
-
-                    <div class="form-group">
-
-                        <label for="total_rooms">
-                            Total Rooms
-                        </label>
-
-                        <input
-                            type="number"
-                            id="total_rooms"
-                            name="total_rooms"
-                            value="{{ old('total_rooms') }}"
-                            min="1"
-                            placeholder="e.g. 10"
-                            required
-                        >
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
             {{-- =================================================
                  ACTIONS
                  ================================================= --}}
