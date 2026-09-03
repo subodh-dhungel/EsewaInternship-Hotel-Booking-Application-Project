@@ -22,13 +22,13 @@ class BookingController extends Controller
         // get bookings of current user
         $booking = Booking::where('user_id', $userId)
             ->with('hotel', 'roomType')
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('bookings.history',[
-            'bookings'=>$booking,
-            'hotel'=>$hotel,
-            'room_type'=>$room_type,
+        return view('bookings.history', [
+            'bookings' => $booking,
+            'hotel' => $hotel,
+            'room_type' => $room_type,
         ]);
     }
 
@@ -43,10 +43,58 @@ class BookingController extends Controller
         ]);
     }
 
+    public function checkAvailability(
+        Request $request,
+        Hotel $hotel,
+        RoomTypes $room_type
+    ) {
+        // Validate the availability data
+        $validated = $request->validate([
+            'check_in' => ['required', 'date', 'after_or_equal:today'],
+            'check_out' => ['required', 'date', 'after:check_in'],
+            'adults' => ['required', 'integer', 'min:1'],
+            'children' => ['required', 'integer', 'min:0'],
+            'number_of_rooms' => ['required', 'integer', 'min:1'],
+            'phone_number' => [
+                'required',
+                'string',
+                'size:10',
+                'regex:/^9[678]\d{8}$/',
+            ],
+        ]);
+
+        // Make sure the room type belongs to this hotel
+        abort_unless(
+            $room_type->hotel_id === $hotel->id,
+            404
+        );
+
+        // Find the number of rooms already booked
+        // during the requested dates
+        $bookedRooms = Booking::where('room_type_id', $room_type->id)
+            ->whereIn('booking_status', ['pending', 'confirmed'])
+            ->where('check_in', '<', $validated['check_out'])
+            ->where('check_out', '>', $validated['check_in'])
+            ->sum('number_of_rooms');
+
+        // Calculate available rooms
+        $availableRooms = $room_type->total_rooms - $bookedRooms;
+
+        // Return the booking page with availability information
+        return view('bookings.create', [
+            'hotel' => $hotel,
+            'room_type' => $room_type,
+            'available' => $availableRooms >= $validated['number_of_rooms'],
+            'available_rooms' => max(0, $availableRooms),
+            'bookingData' => $validated,
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBookingRequest $request,Hotel $hotel,RoomTypes $room_type) {
+    public function store(StoreBookingRequest $request, Hotel $hotel, RoomTypes $room_type)
+    {
         // Form bata validated data nikalne
         $validated = $request->validated();
 
@@ -83,9 +131,7 @@ class BookingController extends Controller
         $pricePerNight = $room_type->discount_price ?? $room_type->price;
 
         // Total booking price calculate garne
-        $totalPrice = $pricePerNight
-            * $numberOfRooms
-            * $nights;
+        $totalPrice = $pricePerNight * $numberOfRooms * $nights;
 
         // Booking create garne
         $booking = Booking::create([
@@ -126,9 +172,7 @@ class BookingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
-    {
-    }
+    public function show() {}
 
     /**
      * Show the form for editing the specified resource.

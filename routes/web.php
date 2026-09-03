@@ -10,17 +10,7 @@ require __DIR__.'/room_types.php';
 require __DIR__.'/customer_booking.php';
 
 
-/*
-|--------------------------------------------------------------------------
-| Public / Customer Hotel Routes
-|--------------------------------------------------------------------------
-*/
-
-// Homepage
-
-
-
-// Customer hotel listing
+// customer routes...
 Route::middleware(['auth', 'role:customer'])->group(function () {
 
     Route::get('/', [HotelController::class, 'featured'])

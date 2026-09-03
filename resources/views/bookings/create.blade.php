@@ -1,291 +1,277 @@
 <x-layout>
     <main class="page-container">
-        {{-- =====================================================
-         PAGE HEADER
-         ===================================================== --}}
-        <div class="page-header">
+
+```
+    {{-- =====================================================
+     PAGE HEADER
+     ===================================================== --}}
+    <div class="page-header">
+
+        <div>
+            <h1>Book Your Stay</h1>
+
+            <p>
+                Complete the details below to book your room.
+            </p>
+        </div>
+
+        <div class="page-header-actions">
+
+            <a
+                href="{{ route('hotels.show', $hotel) }}"
+                class="btn"
+            >
+                Back to Hotel
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {{-- =====================================================
+     HOTEL AND ROOM TYPE INFORMATION
+     ===================================================== --}}
+    <section class="details-section">
+
+        <div class="section-header">
+
             <div>
-                <h1>Book Your Stay</h1>
+                <h2>Booking Details</h2>
+
                 <p>
-                    Complete the details below to book your room.
+                    You are booking a room at this hotel.
                 </p>
             </div>
-            <div class="page-header-actions">
-                <a href="{{ route('hotels.show', $hotel) }}" class="btn">
-                    Back to Hotel
-                </a>
-            </div>
+
         </div>
-        {{-- =====================================================
-         HOTEL AND ROOM TYPE INFORMATION
-         ===================================================== --}}
+
+
+        <div class="card booking-hotel-card">
+
+            <div class="details-grid">
+
+                {{-- Hotel Name --}}
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Hotel
+                    </span>
+
+                    <span class="detail-value">
+                        {{ $hotel->name }}
+                    </span>
+
+                </div>
+
+
+                {{-- Room Type --}}
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Room Type
+                    </span>
+
+                    <span class="detail-value">
+                        {{ $room_type->name }}
+                    </span>
+
+                </div>
+
+
+                {{-- Price --}}
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Price
+                    </span>
+
+                    <span class="detail-value">
+                        Rs.
+                        {{ number_format($room_type->discount_price ?? $room_type->price, 2) }}
+                        / night
+                    </span>
+
+                </div>
+
+
+                {{-- Capacity --}}
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Capacity
+                    </span>
+
+                    <span class="detail-value">
+                        {{ $room_type->capacity }} Guests
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =====================================================
+     AVAILABILITY RESULT
+     ===================================================== --}}
+    @if(isset($available))
 
         <section class="details-section">
 
-            <div class="section-header">
+            <div class="card">
 
-                <div>
+                @if($available)
 
-                    <h2>Booking Details</h2>
+                    <h2>Rooms Available</h2>
 
                     <p>
-                        You are booking a room at this hotel.
+                        Your requested number of rooms is available.
                     </p>
 
-                </div>
+                    <p>
+                        Available rooms:
+                        <strong>{{ $available_rooms }}</strong>
+                    </p>
 
-            </div>
+                @else
 
+                    <h2>Rooms Not Available</h2>
 
-            <div class="card booking-hotel-card">
+                    <p>
+                        The requested number of rooms are not available
+                        for the selected dates.
+                    </p>
 
-                <div class="details-grid">
+                    <p>
+                        Available rooms:
+                        <strong>{{ $available_rooms }}</strong>
+                    </p>
 
-                    {{-- Hotel Name --}}
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Hotel
-                        </span>
-
-                        <span class="detail-value">
-                            {{ $hotel->name }}
-                        </span>
-
-                    </div>
-
-
-                    {{-- Room Type --}}
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Room Type
-                        </span>
-
-                        <span class="detail-value">
-                            {{ $room_type->name }}
-                        </span>
-
-                    </div>
-
-
-                    {{-- Price --}}
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Price
-                        </span>
-
-                        <span class="detail-value">
-                            Rs. {{ number_format($room_type->price, 2) }} / night
-                        </span>
-
-                    </div>
-
-
-                    {{-- Capacity --}}
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Capacity
-                        </span>
-
-                        <span class="detail-value">
-                            {{ $room_type->capacity }} Guests
-                        </span>
-
-                    </div>
-
-                </div>
+                @endif
 
             </div>
 
         </section>
 
+    @endif
 
-        {{-- =====================================================
-         BOOKING FORM
-         ===================================================== --}}
 
-        <section class="details-section">
+    {{-- =====================================================
+     BOOKING FORM
+     ===================================================== --}}
+    <section class="details-section">
 
-            <div class="section-header">
+        <div class="section-header">
 
-                <div>
+            <div>
 
-                    <h2>Stay Information</h2>
+                <h2>Stay Information</h2>
 
-                    <p>
-                        Select your dates and the number of guests.
-                    </p>
-
-                </div>
+                <p>
+                    Select your dates and the number of guests.
+                </p>
 
             </div>
 
-
-            <div class="card booking-form-card">
-
-                <form
-                    action="{{ route('bookings.store', [
-                        'hotel' => $hotel->id,
-                        'room_type' => $room_type->id,
-                    ]) }}"
-                    method="POST"
-                >
-
-                    @csrf
+        </div>
 
 
-                    {{-- =====================================================
-                     CHECK-IN AND CHECK-OUT
-                     ===================================================== --}}
+        <div class="card booking-form-card">
 
-                    <div class="form-grid">
+            <form
+                action="{{ route('bookings.checkAvailability', [$hotel, $room_type]) }}"
+                method="POST"
+            >
 
-                        {{-- Check-in --}}
-
-                        <div class="form-group">
-
-                            <label for="check-in">
-                                Check-in
-                            </label>
-
-                            <input
-                                id="check-in"
-                                class="input"
-                                type="date"
-                                name="check-in"
-                                value="{{ old('check-in') }}"
-                                min="{{ now()->format('Y-m-d') }}"
-                                required
-                            >
-
-                            @error('check-in')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
-                            @enderror
-
-                        </div>
+                @csrf
 
 
-                        {{-- Check-out --}}
+                {{-- =====================================================
+                 CHECK-IN / CHECK-OUT
+                 ===================================================== --}}
+                <div class="form-grid">
 
-                        <div class="form-group">
-
-                            <label for="check-out">
-                                Check-out
-                            </label>
-
-                            <input
-                                id="check-out"
-                                class="input"
-                                type="date"
-                                name="check-out"
-                                value="{{ old('check-out') }}"
-                                min="{{ now()->addDay()->format('Y-m-d') }}"
-                                required
-                            >
-
-                            @error('check-out')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
-                            @enderror
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- =====================================================
-                     GUEST INFORMATION
-                     ===================================================== --}}
-
-                    <div class="form-grid">
-
-                        {{-- Adults --}}
-
-                        <div class="form-group">
-
-                            <label for="adults">
-                                Adults
-                            </label>
-
-                            <input
-                                id="adults"
-                                class="input"
-                                type="number"
-                                name="adults"
-                                value="{{ old('adults', 1) }}"
-                                min="1"
-                                required
-                            >
-
-                            @error('adults')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Children --}}
-
-                        <div class="form-group">
-
-                            <label for="children">
-                                Children
-                            </label>
-
-                            <input
-                                id="children"
-                                class="input"
-                                type="number"
-                                name="children"
-                                value="{{ old('children', 0) }}"
-                                min="0"
-                                required
-                            >
-
-                            @error('children')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
-                            @enderror
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- =====================================================
-                     NUMBER OF ROOMS
-                     ===================================================== --}}
-
+                    {{-- Check-in --}}
                     <div class="form-group">
 
-                        <label for="number_of_rooms">
-                            Number of Rooms
+                        <label for="check_in">
+                            Check-in
                         </label>
 
                         <input
-                            id="number_of_rooms"
+                            id="check_in"
+                            class="input"
+                            type="date"
+                            name="check_in"
+                            value="{{ old('check_in', $bookingData['check_in'] ?? '') }}"
+                            min="{{ now()->format('Y-m-d') }}"
+                            required
+                        >
+
+                        @error('check_in')
+                            <p class="form-error">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Check-out --}}
+                    <div class="form-group">
+
+                        <label for="check_out">
+                            Check-out
+                        </label>
+
+                        <input
+                            id="check_out"
+                            class="input"
+                            type="date"
+                            name="check_out"
+                            value="{{ old('check_out', $bookingData['check_out'] ?? '') }}"
+                            min="{{ now()->addDay()->format('Y-m-d') }}"
+                            required
+                        >
+
+                        @error('check_out')
+                            <p class="form-error">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                </div>
+
+
+                {{-- =====================================================
+                 GUEST INFORMATION
+                 ===================================================== --}}
+                <div class="form-grid">
+
+                    {{-- Adults --}}
+                    <div class="form-group">
+
+                        <label for="adults">
+                            Adults
+                        </label>
+
+                        <input
+                            id="adults"
                             class="input"
                             type="number"
-                            name="number_of_rooms"
-                            value="{{ old('number_of_rooms', 1) }}"
+                            name="adults"
+                            value="{{ old('adults', $bookingData['adults'] ?? 1) }}"
                             min="1"
                             required
                         >
 
-                        @error('number_of_rooms')
+                        @error('adults')
                             <p class="form-error">
                                 {{ $message }}
                             </p>
@@ -294,26 +280,24 @@
                     </div>
 
 
-                    {{-- =====================================================
-                     PHONE NUMBER
-                     ===================================================== --}}
-
+                    {{-- Children --}}
                     <div class="form-group">
 
-                        <label for="number_of_rooms">
-                            Phone number
+                        <label for="children">
+                            Children
                         </label>
 
                         <input
-                            id="number_of_rooms"
+                            id="children"
                             class="input"
-                            type="text"
-                            name="phone_number"
-                            value="{{ old('phone_number') }}"
+                            type="number"
+                            name="children"
+                            value="{{ old('children', $bookingData['children'] ?? 0) }}"
+                            min="0"
                             required
                         >
 
-                        @error('phone_number')
+                        @error('children')
                             <p class="form-error">
                                 {{ $message }}
                             </p>
@@ -321,37 +305,107 @@
 
                     </div>
 
+                </div>
 
 
+                {{-- =====================================================
+                 NUMBER OF ROOMS
+                 ===================================================== --}}
+                <div class="form-group">
 
-                    {{-- =====================================================
-                     BOOKING ACTIONS
-                     ===================================================== --}}
+                    <label for="number_of_rooms">
+                        Number of Rooms
+                    </label>
 
-                    <div class="form-actions">
+                    <input
+                        id="number_of_rooms"
+                        class="input"
+                        type="number"
+                        name="number_of_rooms"
+                        value="{{ old('number_of_rooms', $bookingData['number_of_rooms'] ?? 1) }}"
+                        min="1"
+                        required
+                    >
 
-                        <a
-                            href="{{ route('hotels.show', $hotel) }}"
-                            class="btn"
+                    @error('number_of_rooms')
+                        <p class="form-error">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+
+                {{-- =====================================================
+                 PHONE NUMBER
+                 ===================================================== --}}
+                <div class="form-group">
+
+                    <label for="phone_number">
+                        Phone Number
+                    </label>
+
+                    <input
+                        id="phone_number"
+                        class="input"
+                        type="text"
+                        name="phone_number"
+                        value="{{ old('phone_number', $bookingData['phone_number'] ?? '') }}"
+                        required
+                    >
+
+                    @error('phone_number')
+                        <p class="form-error">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+
+                {{-- =====================================================
+                 BOOKING ACTIONS
+                 ===================================================== --}}
+                <div class="form-actions">
+
+                    <a
+                        href="{{ route('hotels.show', $hotel) }}"
+                        class="btn"
+                    >
+                        Cancel
+                    </a>
+
+
+                    @if(isset($available) && $available)
+
+                        <button
+                            type="submit"
+                            formaction="{{ route('bookings.store', [$hotel, $room_type]) }}"
+                            class="btn btn-primary"
                         >
-                            Cancel
-                        </a>
+                            Continue to Booking
+                        </button>
+
+                    @else
 
                         <button
                             type="submit"
                             class="btn btn-primary"
                         >
-                            Continue Booking
+                            Check Availability
                         </button>
 
-                    </div>
+                    @endif
 
-                </form>
+                </div>
 
-            </div>
+            </form>
 
-        </section>
+        </div>
 
-    </main>
+    </section>
+
+</main>
+```
 
 </x-layout>

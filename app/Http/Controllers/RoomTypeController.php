@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
-use App\Models\Room;
 use App\Models\RoomTypes;
 use Illuminate\Http\Request;
 
