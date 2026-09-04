@@ -14,47 +14,78 @@ use Illuminate\Support\Str;
 class BookingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the customer's booking history.
      */
-    public function index(Hotel $hotel, RoomTypes $room_type)
+    public function index()
     {
-        $userId = Auth::user()->id;
-        // get bookings of current user
-        $booking = Booking::where('user_id', $userId)
-            ->with('hotel', 'roomType')
-            ->orderBy('created_at', 'desc')
+        $bookings = Booking::with(['hotel', 'roomType'])
+            ->where('user_id', Auth::id())
+            ->latest()
             ->get();
 
         return view('bookings.history', [
-            'bookings' => $booking,
-            'hotel' => $hotel,
-            'room_type' => $room_type,
+            'bookings' => $bookings,
         ]);
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Display the booking form.
      */
     public function create(Hotel $hotel, RoomTypes $room_type)
     {
+        abort_unless(
+            $room_type->hotel_id === $hotel->id,
+            404
+        );
+
         return view('bookings.create', [
             'hotel' => $hotel,
             'room_type' => $room_type,
         ]);
     }
 
+
+    /**
+     * Check room availability for the requested dates.
+     */
     public function checkAvailability(
         Request $request,
         Hotel $hotel,
         RoomTypes $room_type
     ) {
-        // Validate the availability data
+        // Validate availability data
         $validated = $request->validate([
-            'check_in' => ['required', 'date', 'after_or_equal:today'],
-            'check_out' => ['required', 'date', 'after:check_in'],
-            'adults' => ['required', 'integer', 'min:1'],
-            'children' => ['required', 'integer', 'min:0'],
-            'number_of_rooms' => ['required', 'integer', 'min:1'],
+            'check_in' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+            ],
+
+            'check_out' => [
+                'required',
+                'date',
+                'after:check_in',
+            ],
+
+            'adults' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+
+            'children' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+
+            'number_of_rooms' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+
             'phone_number' => [
                 'required',
                 'string',
@@ -63,137 +94,260 @@ class BookingController extends Controller
             ],
         ]);
 
+
+        // Make sure this room type belongs to this hotel
+        abort_unless(
+            $room_type->hotel_id === $hotel->id,
+            404
+        );
+
+
+        // Find rooms already booked during the requested dates
+        $bookedRooms = Booking::where(
+                'room_type_id',
+                $room_type->id
+            )
+            ->whereIn(
+                'booking_status',
+                ['pending', 'confirmed']
+            )
+            ->where(
+                'check_in',
+                '<',
+                $validated['check_out']
+            )
+            ->where(
+                'check_out',
+                '>',
+                $validated['check_in']
+            )
+            ->sum('number_of_rooms');
+
+
+        // Calculate remaining rooms
+        $availableRooms = $room_type->total_rooms - $bookedRooms;
+
+
+        // Return the booking page with the result
+        return view('bookings.create', [
+            'hotel' => $hotel,
+            'room_type' => $room_type,
+
+            'available' =>
+                $availableRooms >= $validated['number_of_rooms'],
+
+            'available_rooms' =>
+                max(0, $availableRooms),
+
+            'bookingData' => $validated,
+        ]);
+    }
+
+
+    /**
+     * Store a new booking.
+     */
+    public function store(
+        StoreBookingRequest $request,
+        Hotel $hotel,
+        RoomTypes $room_type
+    ) {
+        // Get validated data from FormRequest
+        $validated = $request->validated();
+
+
         // Make sure the room type belongs to this hotel
         abort_unless(
             $room_type->hotel_id === $hotel->id,
             404
         );
 
-        // Find the number of rooms already booked
-        // during the requested dates
-        $bookedRooms = Booking::where('room_type_id', $room_type->id)
-            ->whereIn('booking_status', ['pending', 'confirmed'])
-            ->where('check_in', '<', $validated['check_out'])
-            ->where('check_out', '>', $validated['check_in'])
-            ->sum('number_of_rooms');
 
-        // Calculate available rooms
-        $availableRooms = $room_type->total_rooms - $bookedRooms;
-
-        // Return the booking page with availability information
-        return view('bookings.create', [
-            'hotel' => $hotel,
-            'room_type' => $room_type,
-            'available' => $availableRooms >= $validated['number_of_rooms'],
-            'available_rooms' => max(0, $availableRooms),
-            'bookingData' => $validated,
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBookingRequest $request, Hotel $hotel, RoomTypes $room_type)
-    {
-        // Form bata validated data nikalne
-        $validated = $request->validated();
-
-        // Logged in customer ko ID nikalne
-        $uid = Auth::id();
-
-        // Room type yo hotel kai ho ki hoina check garne
-        abort_unless(
-            $room_type->hotel_id === $hotel->id,
-            404
+        // Convert dates to Carbon
+        $checkIn = Carbon::parse(
+            $validated['check_in']
         );
 
-        // Check-in ra check-out date lai Carbon date ma convert garne
-        $checkIn = Carbon::parse($validated['check-in']);
-        $checkOut = Carbon::parse($validated['check-out']);
+        $checkOut = Carbon::parse(
+            $validated['check_out']
+        );
 
-        // Customer kati raat basne ho calculate garne
+
+        // Calculate number of nights
         $nights = $checkIn->diffInDays($checkOut);
 
-        // Customer le request gareko room ko number nikalne
+
+        // Requested number of rooms
         $numberOfRooms = $validated['number_of_rooms'];
 
-        // Requested rooms available cha ki chaina check garne
-        if ($numberOfRooms > $room_type->available_rooms) {
+
+        /*
+         * ---------------------------------------------------------
+         * FINAL AVAILABILITY CHECK
+         * ---------------------------------------------------------
+         *
+         * We check availability again here because the availability
+         * may have changed after the customer initially checked it.
+         */
+
+        $bookedRooms = Booking::where(
+                'room_type_id',
+                $room_type->id
+            )
+            ->whereIn(
+                'booking_status',
+                ['pending', 'confirmed']
+            )
+            ->where(
+                'check_in',
+                '<',
+                $validated['check_out']
+            )
+            ->where(
+                'check_out',
+                '>',
+                $validated['check_in']
+            )
+            ->sum('number_of_rooms');
+
+
+        // Calculate the latest available inventory
+        $availableRooms = $room_type->total_rooms - $bookedRooms;
+
+
+        // Stop booking if there aren't enough rooms
+        if ($numberOfRooms > $availableRooms) {
+
             return back()
                 ->withErrors([
-                    'number_of_rooms' => 'Not enough rooms are available.'
+                    'number_of_rooms' =>
+                        "Only {$availableRooms} room(s) are available for the selected dates.",
                 ])
                 ->withInput();
         }
 
-        // Discount price cha bhane discount price use garne
-        // Discount price chaina bhane normal price use garne
-        $pricePerNight = $room_type->discount_price ?? $room_type->price;
 
-        // Total booking price calculate garne
-        $totalPrice = $pricePerNight * $numberOfRooms * $nights;
+        /*
+         * ---------------------------------------------------------
+         * CALCULATE PRICE
+         * ---------------------------------------------------------
+         */
 
-        // Booking create garne
+        $pricePerNight =
+            $room_type->discount_price
+            ?? $room_type->price;
+
+
+        $totalPrice =
+            $pricePerNight
+            * $numberOfRooms
+            * $nights;
+
+
+        /*
+         * ---------------------------------------------------------
+         * CREATE BOOKING
+         * ---------------------------------------------------------
+         */
+
         $booking = Booking::create([
-            // System generated booking number
-            'booking_number' => 'BK-' . strtoupper(Str::random(8)),
 
-            // Logged in customer
-            'user_id' => $uid,
+            'booking_number' =>
+                'BK-' . strtoupper(Str::random(8)),
 
-            // Hotel ra room type
-            'hotel_id' => $hotel->id,
-            'room_type_id' => $room_type->id,
+            'user_id' =>
+                Auth::id(),
 
-            // Customer bata aayeko booking information
-            'check_in' => $validated['check-in'],
-            'check_out' => $validated['check-out'],
-            'adults' => $validated['adults'],
-            'children' => $validated['children'],
-            'number_of_rooms' => $numberOfRooms,
-            'phone_number' => $validated['phone_number'],
+            'hotel_id' =>
+                $hotel->id,
 
-            // Calculated booking price
-            'total_price' => $totalPrice,
+            'room_type_id' =>
+                $room_type->id,
 
-            // Initial booking status
-            'booking_status' => 'pending',
+            'check_in' =>
+                $validated['check_in'],
 
-            // Payment initially pending
-            'payment_status' => 'pending',
+            'check_out' =>
+                $validated['check_out'],
+
+            'adults' =>
+                $validated['adults'],
+
+            'children' =>
+                $validated['children'],
+
+            'number_of_rooms' =>
+                $numberOfRooms,
+
+            'phone_number' =>
+                $validated['phone_number'],
+
+            'total_price' =>
+                $totalPrice,
+
+            'booking_status' =>
+                'pending',
+
+            'payment_status' =>
+                'pending',
         ]);
 
-        // Booking create bhayepachi booking details page ma jane
+
+        /*
+         * ---------------------------------------------------------
+         * REDIRECT TO BOOKING HISTORY
+         * ---------------------------------------------------------
+         */
+
         return redirect()
-            ->route('bookings.history', $booking)
-            ->with('success', 'Booking created successfully.');
+            ->route('bookings.history')
+            ->with(
+                'success',
+                'Booking created successfully.'
+            );
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show() {}
 
     /**
-     * Show the form for editing the specified resource.
+     * Show a single booking.
      */
-    public function edit(string $id)
+    public function show(Booking $booking)
+    {
+        abort_unless(
+            $booking->user_id === Auth::id(),
+            403
+        );
+
+        return view('bookings.show', [
+            'booking' => $booking,
+        ]);
+    }
+
+
+    /**
+     * Edit booking.
+     */
+    public function edit(Booking $booking)
     {
         //
     }
 
+
     /**
-     * Update the specified resource in storage.
+     * Update booking.
      */
-    public function update(Request $request, string $id)
-    {
+    public function update(
+        Request $request,
+        Booking $booking
+    ) {
         //
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Cancel/delete booking.
      */
-    public function destroy(string $id)
+    public function destroy(Booking $booking)
     {
         //
     }

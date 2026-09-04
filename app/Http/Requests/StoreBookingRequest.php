@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 
 class StoreBookingRequest extends FormRequest
 {
@@ -21,43 +20,46 @@ class StoreBookingRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules():array
+    public function rules(): array
     {
         return [
-            // checkin date validate garne
-            'check-in' => [
+
+            // Check-in date
+            'check_in' => [
                 'required',
                 'date',
-                'after_or_equal:today'
+                'after_or_equal:today',
             ],
 
-            // checkout date validate garne
-            'check-out' => [
+            // Check-out date
+            'check_out' => [
                 'required',
                 'date',
-                'after:check-in',
+                'after:check_in',
             ],
 
-            // Kati jana adult guest chan vanera validate garne
+            // Number of adults
             'adults' => [
                 'required',
                 'integer',
-                'min:1'
+                'min:1',
             ],
 
-            // children ko number validate garne
+            // Number of children
             'children' => [
                 'required',
                 'integer',
-                'min:0'
+                'min:0',
             ],
 
-            // customer le kati ota room book garna khojeko ho validate garne
+            // Number of rooms
             'number_of_rooms' => [
                 'required',
                 'integer',
+                'min:1',
             ],
 
+            // Customer phone number
             'phone_number' => [
                 'required',
                 'string',
