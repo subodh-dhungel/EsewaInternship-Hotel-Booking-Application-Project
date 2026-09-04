@@ -244,8 +244,8 @@ class BookingController extends Controller
         });
 
         return redirect()
-            ->route('bookings.show', $booking)
-            ->with('success', 'Booking created successfully.');
+            ->route('payments.initiate', $booking);
+            
     }
 
     /**

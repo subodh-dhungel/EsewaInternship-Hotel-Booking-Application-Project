@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'esewa'=>[
+        'merchant_code'=>env('ESEWA_MERCHANT_CODE'),
+        'secret_key'=>env('ESEWA_SECRET_KEY'),
+        'payment_url'=>env('ESEWA_PAYMENT_URL'),
+    ]
+
 ];

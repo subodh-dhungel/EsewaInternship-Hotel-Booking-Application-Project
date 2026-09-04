@@ -28,35 +28,41 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'check-in' => 'date',
-        'check_out'=> 'date',
-        'price'=>'decimal:2',
-        'total_amount'=>'decimal:2',
-        'expires_at'=>'datetime'
+        'check_in' => 'date',
+        'check_out' => 'date',
+        'price' => 'decimal:2',
+        'total_price' => 'decimal:2',
+        'expires_at' => 'datetime'
     ];
 
     use HasFactory;
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function hotel(): BelongsTo {
+    public function hotel(): BelongsTo
+    {
         return $this->belongsTo(Hotel::class);
     }
 
-    public function roomType(): BelongsTo {
+    public function roomType(): BelongsTo
+    {
         return $this->belongsTo(RoomTypes::class);
     }
 
-    public function payment(): HasOne {
+    public function payment(): HasOne
+    {
         return $this->hasOne(Payment::class);
     }
 
-    public function review(): HasOne {
+    public function review(): HasOne
+    {
         return $this->hasOne(Review::class);
     }
 
-    public function coupon(): BelongsToMany {
+    public function coupon(): BelongsToMany
+    {
         return $this->belongsToMany(Coupons::class);
     }
 }

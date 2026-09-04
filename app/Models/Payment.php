@@ -9,6 +9,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Payment extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'booking_id',
+        'transaction_id',
+        'payment_method',
+        'amount',
+        'status',
+        'paid_at',
+    ];
+
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'paid_at' => 'datetime'
+    ];
+
     public function booking(): BelongsTo{
         return $this->belongsTo(Booking::class);
     }
