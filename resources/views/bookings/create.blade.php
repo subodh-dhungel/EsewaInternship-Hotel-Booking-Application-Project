@@ -119,6 +119,23 @@
                     </div>
 
 
+                    {{-- Available Rooms --}}
+                    <div class="detail-item">
+                        <span class="detail-label">Available Rooms</span>
+
+                        <span class="detail-value">
+                            @if ($available_rooms !== null && $available_rooms < 1)                                    
+                                    <p class="error-text">
+                                        Available rooms:
+                                        <strong>0</strong>
+                                    </p>
+                            @else
+                                {{ $available_rooms }}
+                            @endif
+                        </span>
+                    </div>
+
+
                 </div>
 
             </div>
@@ -131,49 +148,37 @@
          ===================================================== --}}
         @if (isset($available))
 
-            <section class="details-section">
-
-
-
-
-                @if ($available)
-                    <h2>
-                        Rooms Available
-                    </h2>
+            @if ($available)
+                <section class="availability-alert availability-success" role="status">
+                    <h2>Rooms Available</h2>
 
                     <p>
-                        Your requested number of rooms is
-                        available for the selected dates.
+                        Your requested number of rooms is available for the selected dates.
                     </p>
 
                     <p>
                         Available rooms:
-
-                        <strong>
-                            {{ $available_rooms }}
-                        </strong>
+                        <strong>{{ $available_rooms }}</strong>
                     </p>
-                @else
-                    <h2>
-                        Rooms Not Available
-                    </h2>
+                </section>
+            @else
+                <section class="availability-alert availability-danger" role="alert">
+                    <h2>Rooms Not Available</h2>
 
                     <p>
-                        The requested number of rooms is not
-                        available for the selected dates.
+                        We do not have enough rooms for your selected dates.
                     </p>
 
                     <p>
                         Available rooms:
-
-                        <strong>
-                            {{ $available_rooms }}
-                        </strong>
+                        <strong>{{ $available_rooms }}</strong>
                     </p>
-                @endif
 
-
-            </section>
+                    <p>
+                        Please reduce the number of rooms or choose different dates.
+                    </p>
+                </section>
+            @endif
 
         @endif
 
@@ -222,16 +227,18 @@
                                 Check-in
                             </label>
 
-                            <input id="check_in" class="input" type="date" name="check_in"
+                            <input
+                                id="check_in"
+                                type="date"
+                                name="check_in"
                                 value="{{ old('check_in', $bookingData['check_in'] ?? '') }}"
-                                min="{{ now()->format('Y-m-d') }}" required>
+                                min="{{ now()->format('Y-m-d') }}"
+                                required
+                            >
 
                             @error('check_in')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
+                                <p class="form-error">{{ $message }}</p>
                             @enderror
-
                         </div>
 
 
@@ -242,17 +249,17 @@
                                 Check-out
                             </label>
 
-                            <input id="check_out" class="input" type="date" name="check_out"
+                            <input
+                                id="check_out"
+                                type="date"
+                                name="check_out"
                                 value="{{ old('check_out', $bookingData['check_out'] ?? '') }}"
-                                min="{{ now()->addDay()->format('Y-m-d') }}"
-                                required>
+                                required
+                            >
 
                             @error('check_out')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
+                                <p class="form-error">{{ $message }}</p>
                             @enderror
-
                         </div>
 
 
@@ -272,16 +279,18 @@
                                 Adults
                             </label>
 
-                            <input id="adults" class="input" type="number" name="adults"
+                            <input
+                                id="adults"
+                                type="number"
+                                name="adults"
                                 value="{{ old('adults', $bookingData['adults'] ?? 1) }}"
-                                min="1" required>
+                                min="1"
+                                required
+                            >
 
                             @error('adults')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
+                                <p class="form-error">{{ $message }}</p>
                             @enderror
-
                         </div>
 
 
@@ -292,16 +301,18 @@
                                 Children
                             </label>
 
-                            <input id="children" class="input" type="number" name="children"
+                            <input
+                                id="children"
+                                type="number"
+                                name="children"
                                 value="{{ old('children', $bookingData['children'] ?? 0) }}"
-                                min="0" required>
+                                min="0"
+                                required
+                            >
 
                             @error('children')
-                                <p class="form-error">
-                                    {{ $message }}
-                                </p>
+                                <p class="form-error">{{ $message }}</p>
                             @enderror
-
                         </div>
 
 
@@ -317,16 +328,18 @@
                             Number of Rooms
                         </label>
 
-                        <input id="number_of_rooms" class="input" type="number" name="number_of_rooms"
+                        <input
+                            id="number_of_rooms"
+                            type="number"
+                            name="number_of_rooms"
                             value="{{ old('number_of_rooms', $bookingData['number_of_rooms'] ?? 1) }}"
-                            min="1" required>
+                            min="1"
+                            required
+                        >
 
                         @error('number_of_rooms')
-                            <p class="form-error">
-                                {{ $message }}
-                            </p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
-
                     </div>
 
 
@@ -339,16 +352,18 @@
                             Phone Number
                         </label>
 
-                        <input id="phone_number" class="input" type="text" name="phone_number"
+                        <input
+                            id="phone_number"
+                            type="tel"
+                            name="phone_number"
                             value="{{ old('phone_number', $bookingData['phone_number'] ?? '') }}"
-                            required>
+                            autocomplete="tel"
+                            required
+                        >
 
                         @error('phone_number')
-                            <p class="form-error">
-                                {{ $message }}
-                            </p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
-
                     </div>
 
 
@@ -365,10 +380,12 @@
                                 Same form, but submit to store()
                                 instead of checkAvailability()
                             --}}
-                            <button type="submit"
+                            <button
+                                type="submit"
                                 formaction="{{ route('bookings.store', [$hotel, $room_type]) }}"
-                                class="btn btn-primary">
-                                Continue to Booking
+                                class="btn btn-primary"
+                            >
+                                Confirm Booking
                             </button>
                         @else
                             <button type="submit" class="btn btn-primary">
