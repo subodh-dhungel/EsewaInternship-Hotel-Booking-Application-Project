@@ -24,6 +24,15 @@ class Booking extends Model
         'booking_status',
         'payment_status',
         'phone_number',
+        'expires_at',
+    ];
+
+    protected $casts = [
+        'check-in' => 'date',
+        'check_out'=> 'date',
+        'price'=>'decimal:2',
+        'total_amount'=>'decimal:2',
+        'expires_at'=>'datetime'
     ];
 
     use HasFactory;

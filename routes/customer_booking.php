@@ -9,7 +9,7 @@ Route::middleware(['auth', 'permission:create_booking'])->group(function () {
         ->name('bookings.create');
 
     Route::get('/my-bookings', [BookingController::class, 'index'])
-        ->name('bookings.history');
+        ->name('bookings.show');
 
     // Booking lai database ma store garna
     Route::post('/hotels/{hotel}/room-types/{room_type}/book', [BookingController::class, 'store'])
@@ -18,6 +18,4 @@ Route::middleware(['auth', 'permission:create_booking'])->group(function () {
     Route::post('/hotels/{hotel}/room-types/{room_type}/availability',[BookingController::class, 'checkAvailability'])
         ->name('bookings.checkAvailability');
 
-        
-    
 });

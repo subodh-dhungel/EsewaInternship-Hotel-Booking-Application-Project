@@ -30,7 +30,6 @@ class BookingController extends Controller
         ]);
     }
 
-
     /**
      * Display the booking form.
      */
@@ -38,6 +37,11 @@ class BookingController extends Controller
     {
         abort_unless(
             (int) $room_type->hotel_id === (int) $hotel->id,
+            404
+        );
+
+        abort_unless(
+            $hotel->status === 'active',
             404
         );
 
@@ -72,7 +76,6 @@ class BookingController extends Controller
         ]);
     }
 
-
     /**
      * Check room availability for the requested dates.
      */
@@ -81,14 +84,42 @@ class BookingController extends Controller
         Hotel $hotel,
         RoomTypes $room_type
     ) {
-        abort_unless((int) $room_type->hotel_id === (int) $hotel->id, 404);
+        abort_unless(
+            (int) $room_type->hotel_id === (int) $hotel->id,
+            404
+        );
+
+        abort_unless(
+            $hotel->status === 'active',
+            404
+        );
 
         $validated = $request->validate([
-            'check_in' => ['required', 'date', 'after_or_equal:today'],
-            'check_out' => ['required', 'date', 'after:check_in'],
-            'adults' => ['required', 'integer', 'min:1'],
-            'children' => ['required', 'integer', 'min:0'],
-            'number_of_rooms' => ['required', 'integer', 'min:1'],
+            'check_in' => [
+                'required',
+                'date',
+                'after_or_equal:today'
+            ],
+            'check_out' => [
+                'required',
+                'date',
+                'after:check_in'
+            ],
+            'adults' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'children' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+            'number_of_rooms' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
             'phone_number' => [
                 'required',
                 'string',
@@ -114,7 +145,6 @@ class BookingController extends Controller
         ]);
     }
 
-
     /**
      * Store a new booking.
      */
@@ -123,25 +153,43 @@ class BookingController extends Controller
         Hotel $hotel,
         RoomTypes $room_type
     ) {
-        abort_unless((int) $room_type->hotel_id === (int) $hotel->id, 404);
+        abort_unless(
+            (int) $room_type->hotel_id === (int) $hotel->id,
+            404
+        );
 
         $validated = $request->validated();
-
-        $this->validateCapacity($room_type, $validated);
 
         $booking = DB::transaction(function () use (
             $validated,
             $hotel,
             $room_type
         ) {
-            /*
-             * Locking the room type prevents two simultaneous bookings
-             * from exceeding the available inventory.
-             */
+
+            // Lock room type before checking availability
             $lockedRoomType = RoomTypes::whereKey($room_type->id)
                 ->lockForUpdate()
                 ->firstOrFail();
 
+            // Check if hotel is available
+            if ($hotel->status !== 'active') {
+                throw ValidationException::withMessages([
+                    'hotel' => 'This hotel is not currently available for booking.',
+                ]);
+            }
+
+            // Make sure room type belongs to the selected hotel
+            if ((int) $lockedRoomType->hotel_id !== (int) $hotel->id) {
+                abort(404);
+            }
+
+            // Check guest capacity
+            $this->validateCapacity(
+                $lockedRoomType,
+                $validated
+            );
+
+            // Check room availability
             $availableRooms = $this->availableRooms(
                 $lockedRoomType,
                 $validated['check_in'],
@@ -153,33 +201,45 @@ class BookingController extends Controller
             if ($requestedRooms > $availableRooms) {
                 throw ValidationException::withMessages([
                     'number_of_rooms' =>
-                    "Only {$availableRooms} room(s) are available for the selected dates.",
+                        "Only {$availableRooms} room(s) are available for the selected dates.",
                 ]);
             }
 
+            // Calculate total price
             $checkIn = Carbon::parse($validated['check_in']);
             $checkOut = Carbon::parse($validated['check_out']);
+
             $nights = $checkIn->diffInDays($checkOut);
 
             $pricePerNight = $lockedRoomType->discount_price
                 ?? $lockedRoomType->price;
 
-            $totalPrice = $pricePerNight * $requestedRooms * $nights;
+            $totalPrice = $pricePerNight
+                * $requestedRooms
+                * $nights;
 
+            // Create booking
             return Booking::create([
                 'booking_number' => 'BK-' . strtoupper(Str::random(8)),
+
                 'user_id' => Auth::id(),
                 'hotel_id' => $hotel->id,
                 'room_type_id' => $lockedRoomType->id,
+
                 'check_in' => $validated['check_in'],
                 'check_out' => $validated['check_out'],
+
                 'adults' => $validated['adults'],
                 'children' => $validated['children'],
+
                 'number_of_rooms' => $requestedRooms,
                 'phone_number' => $validated['phone_number'],
+
                 'total_price' => $totalPrice,
+
                 'booking_status' => 'pending',
                 'payment_status' => 'pending',
+                'expires_at'=>now()->addMinutes(15),
             ]);
         });
 
@@ -187,7 +247,6 @@ class BookingController extends Controller
             ->route('bookings.show', $booking)
             ->with('success', 'Booking created successfully.');
     }
-
 
     /**
      * Show a single booking.
@@ -204,7 +263,6 @@ class BookingController extends Controller
         ]);
     }
 
-
     /**
      * Edit booking.
      */
@@ -212,7 +270,6 @@ class BookingController extends Controller
     {
         //
     }
-
 
     /**
      * Update booking.
@@ -224,16 +281,35 @@ class BookingController extends Controller
         //
     }
 
-
     /**
-     * Cancel/delete booking.
+     * Cancel booking.
      */
     public function destroy(Booking $booking)
     {
-        //
+        abort_unless(
+            $booking->user_id === Auth::id(),
+            403
+        );
+
+        if (!in_array($booking->booking_status, ['pending', 'confirmed'])) {
+            throw ValidationException::withMessages([
+                'booking' => 'This booking cannot be cancelled.',
+            ]);
+        }
+
+        $booking->update([
+            'booking_status' => 'cancelled',
+        ]);
+
+        return redirect()
+            ->route('bookings.index')
+            ->with('success', 'Booking cancelled successfully.');
     }
 
-    public function availableRooms(
+    /**
+     * Calculate available rooms for the selected dates.
+     */
+    private function availableRooms(
         RoomTypes $roomType,
         string $checkIn,
         string $checkOut
@@ -244,25 +320,30 @@ class BookingController extends Controller
             ->where('check_in', '<', $checkOut)
             ->where('check_out', '>', $checkIn)
             ->sum('number_of_rooms');
-            
+
         return max(
             0,
             (int) $roomType->total_rooms - (int) $bookedRooms
         );
     }
 
+    /**
+     * Validate room capacity.
+     */
     private function validateCapacity(
         RoomTypes $roomType,
         array $data
     ): void {
-        $totalGuests = (int) $data['adults'] + (int) $data['children'];
+        $totalGuests = (int) $data['adults']
+            + (int) $data['children'];
+
         $maximumGuests = (int) $roomType->capacity
             * (int) $data['number_of_rooms'];
 
         if ($totalGuests > $maximumGuests) {
             throw ValidationException::withMessages([
                 'adults' =>
-                "The selected rooms can accommodate a maximum of {$maximumGuests} guests.",
+                    "The selected rooms can accommodate a maximum of {$maximumGuests} guests.",
             ]);
         }
     }
