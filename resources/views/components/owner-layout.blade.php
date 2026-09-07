@@ -47,7 +47,7 @@
                     <span>Rooms</span>
                 </a>
 
-                <a href="#" class="owner-nav-item">
+                <a href="{{route('owner.bookings')}}" class="owner-nav-item">
                     <span class="owner-nav-icon">▣</span>
                     <span>Bookings</span>
                 </a>

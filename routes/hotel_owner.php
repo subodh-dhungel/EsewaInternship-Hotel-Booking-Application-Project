@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Owner\HotelController as OwnerHotelController;
 use App\Http\Controllers\HotelImageController;
+use App\Http\Controllers\OwnerBookingController;
 
 Route::middleware(['auth', 'role:hotel_owner'])->group(function () {
     Route::get('/owner/dashboard', [OwnerHotelController::class, 'dashboard'])
@@ -58,4 +59,8 @@ Route::middleware(['auth', 'role:hotel_owner'])->group(function () {
     Route::delete('/owner/hotel-images/{image}', [HotelImageController::class, 'destroy'])
         ->name('owner.hotel-image.destroy')
         ->middleware('permission:delete_hotel_images');
+
+    Route::get('/owner/bookings', [OwnerBookingController::class, 'index'])
+    ->name('owner.bookings');
+
 });
