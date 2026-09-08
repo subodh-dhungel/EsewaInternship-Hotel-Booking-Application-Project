@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Owner\HotelController as OwnerHotelController;
 use App\Http\Controllers\HotelImageController;
 use App\Http\Controllers\OwnerBookingController;
+use App\Http\Controllers\OwnerDashboardController;
 
 Route::middleware(['auth', 'role:hotel_owner'])->group(function () {
-    Route::get('/owner/dashboard', [OwnerHotelController::class, 'dashboard'])
+    Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index'])
         ->name('owner.index')
         ->middleware('permission:view_dashboard');
 
