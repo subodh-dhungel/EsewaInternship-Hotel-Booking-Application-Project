@@ -61,9 +61,7 @@
                     </a>
 
                 </div>
-
             @else
-
                 {{-- =================================================
                  BOOKINGS
                  ================================================= --}}
@@ -71,7 +69,6 @@
                 <div class="bookings-grid">
 
                     @foreach ($bookings as $booking)
-
                         <div class="card booking-card">
 
                             {{-- Booking Header --}}
@@ -254,17 +251,20 @@
                                 </a>
 
                                 @if ($booking->payment_status === 'pending')
-
-                                    <a href="#" class="btn btn-primary">
+                                    <a href="#" class="btn">
                                         Continue Payment
                                     </a>
-
                                 @endif
+
+                                <form action="{{ route('bookings.destroy', $booking) }}" method="POST">
+                                    @method('DELETE')
+
+                                    <input type="submit" value="Cancel Booking" class="btn-primary rounded-lg bg-red-600">
+                                </form>
 
                             </div>
 
                         </div>
-
                     @endforeach
 
                 </div>

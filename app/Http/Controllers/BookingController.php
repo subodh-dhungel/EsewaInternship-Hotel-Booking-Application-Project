@@ -201,7 +201,7 @@ class BookingController extends Controller
             if ($requestedRooms > $availableRooms) {
                 throw ValidationException::withMessages([
                     'number_of_rooms' =>
-                        "Only {$availableRooms} room(s) are available for the selected dates.",
+                    "Only {$availableRooms} room(s) are available for the selected dates.",
                 ]);
             }
 
@@ -239,14 +239,14 @@ class BookingController extends Controller
 
                 'booking_status' => 'pending',
                 'payment_status' => 'pending',
-                'expires_at'=>now()->addMinutes(15),
+                'expires_at' => now()->addMinutes(15),
             ]);
         });
 
         return redirect()
             ->route('payments.initiate', $booking);
-            
     }
+
 
     /**
      * Show a single booking.
@@ -284,26 +284,27 @@ class BookingController extends Controller
     /**
      * Cancel booking.
      */
-    public function destroy(Booking $booking)
-    {
+    public function destroy(Booking $booking) {
+        // Make sure the booking belongs to authenticated user
         abort_unless(
             $booking->user_id === Auth::id(),
             403
         );
 
-        if (!in_array($booking->booking_status, ['pending', 'confirmed'])) {
-            throw ValidationException::withMessages([
-                'booking' => 'This booking cannot be cancelled.',
-            ]);
-        }
+        // Only pending and confirmed bookings can be cancelled
+        abort_if(
+            $booking->booking_status == 'confirmed'
+            || $booking->status == 'pending', 
+            403
+        );
 
-        $booking->update([
-            'booking_status' => 'cancelled',
-        ]);
+        // Cancel the booking
+        $booking->delete();
 
+        // redirect to the bookings page
         return redirect()
-            ->route('bookings.index')
-            ->with('success', 'Booking cancelled successfully.');
+            ->back()
+            ->with('success','booking deleted successfully');
     }
 
     /**
@@ -343,7 +344,7 @@ class BookingController extends Controller
         if ($totalGuests > $maximumGuests) {
             throw ValidationException::withMessages([
                 'adults' =>
-                    "The selected rooms can accommodate a maximum of {$maximumGuests} guests.",
+                "The selected rooms can accommodate a maximum of {$maximumGuests} guests.",
             ]);
         }
     }

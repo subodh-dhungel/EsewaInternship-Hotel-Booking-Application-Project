@@ -105,7 +105,6 @@ nav a,
 
     border: none;
     border-radius: 7px;
-
     background: #2563eb;
     color: #fff;
 
@@ -120,17 +119,33 @@ nav a,
 }
 
 .btn:hover {
-    background: #1d4ed8;
     transform: translateY(-2px);
 }
 
 .btn-primary {
-    background: #222;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 7px;
+    background: red;
     color: #fff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: .3s;
 }
 
 .btn-primary:hover {
-    background: #000;
+    transform: translateY(-2px);
 }
 
 .btn-secondary {

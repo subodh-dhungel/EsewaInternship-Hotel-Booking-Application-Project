@@ -30,20 +30,3 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
 });
 
-// booking routes...
-Route::middleware('auth')->group(function () {
-    Route::get('/bookings', [BookingController::class, 'index'])
-        ->name('bookings.history');
-
-    Route::get('/bookings/{hotel}/{room_type}/create', [BookingController::class, 'create'])
-        ->name('bookings.create');
-
-    Route::post('/bookings/{hotel}/{room_type}/availability', [BookingController::class, 'checkAvailability'])
-        ->name('bookings.checkAvailability');
-
-    Route::post('/bookings/{hotel}/{room_type}', [BookingController::class, 'store'])
-        ->name('bookings.store');
-
-    Route::get('/bookings/{booking}', [BookingController::class, 'show'])
-        ->name('bookings.show');
-});
