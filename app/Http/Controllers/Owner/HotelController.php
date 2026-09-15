@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cities;
 use App\Models\Hotel;
 use App\Models\RoomTypes;
 use Illuminate\Http\Request;
@@ -54,7 +55,10 @@ class HotelController extends Controller
      */
     public function create()
     {
-        return view('hotels.create');
+        $cities = Cities::get();
+        return view('hotels.create',[
+            'cities'=>$cities
+        ]);
     }
 
 
@@ -67,7 +71,7 @@ class HotelController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'address' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:100'],
+            'city_id' => ['required','exists:cities,id'],
             'district' => ['required', 'string', 'max:100'],
             'country' => ['required', 'string', 'max:100'],
             'latitude' => ['nullable', 'numeric'],
@@ -171,7 +175,7 @@ class HotelController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'address' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:100'],
+            'city_id' => ['required', 'exists:cities,id'],
             'district' => ['required', 'string', 'max:100'],
             'country' => ['required', 'string', 'max:100'],
             'star_rating' => ['required', 'integer', 'min:1', 'max:5'],
@@ -194,7 +198,7 @@ class HotelController extends Controller
             'slug' => Str::slug($validated['name']),
             'description' => $validated['description'],
             'address' => $validated['address'],
-            'city' => $validated['city'],
+            'city' => $validated['city_id'],
             'district' => $validated['district'],
             'country' => $validated['country'],
             'star_rating' => $validated['star_rating'],

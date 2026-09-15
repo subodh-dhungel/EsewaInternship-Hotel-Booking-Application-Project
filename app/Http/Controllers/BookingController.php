@@ -163,7 +163,7 @@ class BookingController extends Controller
         $booking = DB::transaction(function () use (
             $validated,
             $hotel,
-            $room_type
+            $room_type,
         ) {
 
             // Lock room type before checking availability
@@ -293,13 +293,17 @@ class BookingController extends Controller
 
         // Only pending and confirmed bookings can be cancelled
         abort_if(
-            $booking->booking_status == 'confirmed'
-            || $booking->status == 'pending', 
+            in_array($booking->booking_status, ['pending','confirmed']),
             403
         );
 
+        // rollback esewa payment
+        
+
         // Cancel the booking
-        $booking->delete();
+        $booking->update([
+            'booking_status'=>'cancelled'
+        ]);
 
         // redirect to the bookings page
         return redirect()

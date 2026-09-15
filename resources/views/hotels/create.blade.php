@@ -65,8 +65,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" name="city" value="{{ old('city') }}" required>
+                        <label for="city_id">City</label>
+                        <select name="city_id">
+                            <option value="">-- Select City --</option>
+                            @foreach($cities as $city)
+                                <option value="{{ $city->id }}">{{$city->name}}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="form-group">

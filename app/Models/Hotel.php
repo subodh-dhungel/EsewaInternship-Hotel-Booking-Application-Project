@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Hotel extends Model
 {
@@ -17,7 +18,7 @@ class Hotel extends Model
         'slug',
         'description',  
         'address',
-        'city',
+        'city_id',
         'district',
         'country',
         'latitude',
@@ -80,5 +81,9 @@ class Hotel extends Model
     public function user_favorite(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorites');
+    }
+
+    public function cities(): HasOne {
+        return $this->hasOne(Cities::class);
     }
 }

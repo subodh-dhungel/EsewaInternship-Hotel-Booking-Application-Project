@@ -27,7 +27,7 @@ Route::middleware(['auth', 'permission:create_booking'])->group(function () {
         ->name('bookings.checkAvailability');
 
 
-    // Route::post('/bookings/{hotel}/{room_type}', [BookingController::class, 'store'])
-    //     ->name('bookings.store');
+    //Route::post('/bookings/{hotel}/{room_type}', [BookingController::class, 'store'])
+    //->name('bookings.store');
 
 });
