@@ -16,6 +16,14 @@
 
         </div>
 
+        <form action="{{ route('hotels.index') }}" method="GET">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search hotels or cities...">
+
+            <button type="submit">
+                Search
+            </button>
+        </form>
+
 
         <section class="hotel-section card">
 
@@ -51,18 +59,11 @@
                     </p>
 
                 </div>
-
             @else
-
                 <div class="hotel-grid">
 
                     @foreach ($hotels as $hotel)
-
-                        <x-hotel-card
-                            :hotel="$hotel"
-                            status="customer"
-                        />
-
+                        <x-hotel-card :hotel="$hotel" status="customer" />
                     @endforeach
 
                 </div>

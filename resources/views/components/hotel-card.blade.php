@@ -37,13 +37,15 @@
 
         {{-- Hotel Name --}}
         <h3>
-            {{ $hotel->name }}
+            <strong>
+                {{ $hotel->name }}
+            </strong>
         </h3>
 
 
         {{-- Location --}}
         <p class="hotel-location">
-            {{ $hotel->city }}, {{ $hotel->district }}
+            {{ $hotel->city->name }}, {{$hotel->city->country}}
         </p>
 
 

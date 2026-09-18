@@ -10,6 +10,6 @@ class Cities extends Model
 {
     use HasFactory;
     public function hotels(): HasMany{
-        return $this->hasMany(Hotel::class);
+        return $this->hasMany(Hotel::class, 'city_id');
     }
 }

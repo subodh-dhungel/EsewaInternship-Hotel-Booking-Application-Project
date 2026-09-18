@@ -83,7 +83,7 @@ class Hotel extends Model
         return $this->belongsToMany(User::class, 'favorites');
     }
 
-    public function cities(): HasOne {
-        return $this->hasOne(Cities::class);
+    public function city(): BelongsTo {
+        return $this->belongsTo(Cities::class, 'city_id');
     }
 }

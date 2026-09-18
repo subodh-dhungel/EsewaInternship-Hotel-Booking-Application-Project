@@ -198,7 +198,7 @@ class HotelController extends Controller
             'slug' => Str::slug($validated['name']),
             'description' => $validated['description'],
             'address' => $validated['address'],
-            'city' => $validated['city_id'],
+            'city_id' => $validated['city_id'],
             'district' => $validated['district'],
             'country' => $validated['country'],
             'star_rating' => $validated['star_rating'],
