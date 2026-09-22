@@ -66,7 +66,7 @@
 
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" id="city" name="city" value="{{ old('city', $hotel->city) }}" required>
+                        <input type="text" id="city" name="city" value="{{ old('city', $hotel->city?->name) }}" required>
                     </div>
 
                     <div class="form-group">

@@ -15,6 +15,7 @@ class Payment extends Model
         'payment_method',
         'amount',
         'status',
+        'transaction_code',
         'paid_at',
     ];
 

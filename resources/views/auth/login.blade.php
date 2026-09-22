@@ -1,12 +1,23 @@
 <x-layout>
 
     <main class="auth-page">
-        <div class="auth-card">
+        <div class="auth-shell">
+            <aside class="auth-story auth-story--login">
+                <div class="auth-story__shade"></div>
+                <div class="auth-story__content">
+                    <span class="auth-overline">Stay closer to what matters</span>
+                    <h1>Welcome back<br><em>to Nepal.</em></h1>
+                    <p>Pick up where you left off and find a place worth arriving at.</p>
+                    <div class="auth-proof"><span>★</span><div><strong>4.8 / 5</strong><small>average guest rating</small></div></div>
+                </div>
+            </aside>
 
-            <div class="auth-header">
-                <h1>Welcome Back</h1>
-                <p>Login to your Esewa Hotels account</p>
-            </div>
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="auth-card-kicker">Your account</span>
+                    <h2>Sign in</h2>
+                    <p>Access your bookings and saved stays.</p>
+                </div>
 
             <form action="/login" method="POST">
                 @csrf
@@ -46,9 +57,7 @@
                     </div>
                 @endif
 
-                <button type="submit" class="login-btn">
-                    Login
-                </button>
+                <button type="submit" class="login-btn">Sign in <span aria-hidden="true">→</span></button>
             </form>
 
             <div class="register-link">
@@ -58,6 +67,7 @@
                 </p>
             </div>
 
+            </div>
         </div>
     </main>
 

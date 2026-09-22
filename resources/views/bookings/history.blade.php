@@ -1,276 +1,77 @@
 <x-layout>
 
     <main class="page-container">
+        @php
+            $activeBookings = $bookings->whereIn('booking_status', ['pending', 'confirmed'])->count();
+            $completedBookings = $bookings->where('booking_status', 'completed')->count();
+        @endphp
 
-        {{-- =====================================================
-         PAGE HEADER
-         ===================================================== --}}
-
-        <div class="page-header">
-
+        <div class="bookings-page-header">
             <div>
-
-                <h1>My Bookings</h1>
-
-                <p>
-                    View your hotel bookings and stay information.
-                </p>
-
+                <span class="section-kicker">Your travel dashboard</span>
+                <h1>My bookings</h1>
+                <p>Keep track of upcoming stays, payments and booking details.</p>
             </div>
-
+            <a href="{{ route('hotels.index') }}" class="btn">Find another stay <span aria-hidden="true">→</span></a>
         </div>
 
-
-        {{-- =====================================================
-         BOOKING HISTORY
-         ===================================================== --}}
+        <div class="booking-summary">
+            <div><span class="booking-summary__icon">▣</span><div><strong>{{ $bookings->count() }}</strong><small>Total bookings</small></div></div>
+            <div><span class="booking-summary__icon booking-summary__icon--green">✓</span><div><strong>{{ $activeBookings }}</strong><small>Upcoming stays</small></div></div>
+            <div><span class="booking-summary__icon booking-summary__icon--gold">↗</span><div><strong>{{ $completedBookings }}</strong><small>Completed stays</small></div></div>
+        </div>
 
         <section class="details-section">
-
-            <div class="section-header">
-
-                <div>
-
-                    <h2>Booking History</h2>
-
-                    <p>
-                        Here you can see all the hotels and rooms you have booked.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            {{-- =================================================
-             NO BOOKINGS
-             ================================================= --}}
-
             @if ($bookings->isEmpty())
-
-                <div class="empty-state card">
-
-                    <h3>No bookings yet</h3>
-
-                    <p>
-                        You have not booked any hotels yet.
-                    </p>
-
-                    <a href="{{ route('hotels.index') }}" class="btn btn-primary">
-                        Explore Hotels
-                    </a>
-
+                <div class="booking-empty-state">
+                    <div class="booking-empty-state__icon">⌂</div>
+                    <h2>Your next stay starts here</h2>
+                    <p>You have not booked a hotel yet. Explore comfortable stays across Nepal.</p>
+                    <a href="{{ route('hotels.index') }}" class="btn">Explore hotels <span aria-hidden="true">→</span></a>
                 </div>
             @else
-                {{-- =================================================
-                 BOOKINGS
-                 ================================================= --}}
-
                 <div class="bookings-grid">
-
                     @foreach ($bookings as $booking)
-                        <div class="card booking-card">
-
-                            {{-- Booking Header --}}
-
+                        <article class="booking-card">
                             <div class="booking-header">
-
                                 <div>
-
-                                    <h3>
-                                        {{ $booking->hotel->name }}
-                                    </h3>
-
-                                    <p class="booking-location">
-                                        {{ $booking->hotel->city }},
-                                        {{ $booking->hotel->district }},
-                                        {{ $booking->hotel->country }}
-                                    </p>
-
+                                    <span class="booking-card__eyebrow">{{ $booking->booking_number }}</span>
+                                    <h3>{{ $booking->hotel->name }}</h3>
+                                    <p class="booking-location">{{ $booking->hotel->city?->name ?? 'Nepal' }}{{ $booking->hotel->district ? ', ' . $booking->hotel->district : '' }}</p>
                                 </div>
-
-
-                                {{-- Booking Status --}}
-
                                 <span class="booking-status booking-status-{{ $booking->booking_status }}">
                                     {{ ucfirst($booking->booking_status) }}
                                 </span>
-
                             </div>
-
-
-                            {{-- Booking Number --}}
-
-                            <div class="booking-number">
-
-                                <span class="detail-label">
-                                    Booking Number
-                                </span>
-
-                                <span class="detail-value">
-                                    {{ $booking->booking_number }}
-                                </span>
-
+                            <div class="booking-stay-bar">
+                                <div><span>Stay dates</span><strong>{{ \Carbon\Carbon::parse($booking->check_in)->format('M d') }} - {{ \Carbon\Carbon::parse($booking->check_out)->format('M d, Y') }}</strong></div>
+                                <div><span>Room</span><strong>{{ $booking->roomType->name }}</strong></div>
+                                <div><span>Guests</span><strong>{{ $booking->adults }} adults{{ $booking->children ? ', ' . $booking->children . ' children' : '' }}</strong></div>
                             </div>
-
-
-                            {{-- Booking Information --}}
-
                             <div class="booking-details">
-
-                                {{-- Room Type --}}
-
                                 <div class="booking-detail">
-
-                                    <span class="detail-label">
-                                        Room Type
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {{ $booking->roomType->name }}
-                                    </span>
-
+                                    <span class="detail-label">Rooms</span><span class="detail-value">{{ $booking->number_of_rooms }}</span>
                                 </div>
-
-
-                                {{-- Number of Rooms --}}
-
                                 <div class="booking-detail">
-
-                                    <span class="detail-label">
-                                        Rooms
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {{ $booking->number_of_rooms }}
-                                    </span>
-
+                                    <span class="detail-label">Payment</span><span class="payment-status payment-status-{{ $booking->payment_status }}">{{ ucfirst($booking->payment_status) }}</span>
                                 </div>
-
-
-                                {{-- Check-in --}}
-
-                                <div class="booking-detail">
-
-                                    <span class="detail-label">
-                                        Check-in
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {{ \Carbon\Carbon::parse($booking->check_in)->format('M d, Y') }}
-                                    </span>
-
-                                </div>
-
-
-                                {{-- Check-out --}}
-
-                                <div class="booking-detail">
-
-                                    <span class="detail-label">
-                                        Check-out
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {{ \Carbon\Carbon::parse($booking->check_out)->format('M d, Y') }}
-                                    </span>
-
-                                </div>
-
-
-                                {{-- Adults --}}
-
-                                <div class="booking-detail">
-
-                                    <span class="detail-label">
-                                        Adults
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {{ $booking->adults }}
-                                    </span>
-
-                                </div>
-
-
-                                {{-- Children --}}
-
-                                <div class="booking-detail">
-
-                                    <span class="detail-label">
-                                        Children
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {{ $booking->children }}
-                                    </span>
-
-                                </div>
-
                             </div>
-
-
-                            {{-- Price and Payment --}}
-
                             <div class="booking-footer">
-
-                                <div>
-
-                                    <span class="detail-label">
-                                        Total Price
-                                    </span>
-
-                                    <span class="booking-price">
-                                        Rs. {{ number_format($booking->total_price, 2) }}
-                                    </span>
-
+                                <div><span class="detail-label">Total price</span><strong class="booking-price">रु {{ number_format($booking->total_price, 2) }}</strong></div>
+                                <div class="booking-actions">
+                                    <a href="{{ route('bookings.show', $booking) }}" class="btn btn-secondary">View details <span aria-hidden="true">→</span></a>
+                                    @if ($booking->payment_status === 'pending')
+                                        <a href="{{ route('payments.initiate', $booking) }}" class="btn">Continue payment</a>
+                                    @endif
+                                    @if (in_array($booking->booking_status, ['pending', 'confirmed']))
+                                        <form action="{{ route('bookings.destroy', $booking) }}" method="POST">@csrf @method('DELETE')<button type="submit" class="booking-cancel">Cancel</button></form>
+                                    @endif
                                 </div>
-
-
-                                <div>
-
-                                    <span class="detail-label">
-                                        Payment
-                                    </span>
-
-                                    <span class="payment-status payment-status-{{ $booking->payment_status }}">
-                                        {{ ucfirst($booking->payment_status) }}
-                                    </span>
-
-                                </div>
-
                             </div>
-
-
-                            {{-- Actions --}}
-
-                            <div class="booking-actions">
-
-                                <a href="{{ route('bookings.history', $booking) }}" class="btn">
-                                    View Booking
-                                </a>
-
-                                @if ($booking->payment_status === 'pending')
-                                    <a href="#" class="btn">
-                                        Continue Payment
-                                    </a>
-                                @endif
-
-                                <form action="{{ route('bookings.destroy', $booking) }}" method="POST">
-                                    @method('DELETE')
-
-                                    <input type="submit" value="Cancel Booking" class="btn-primary rounded-lg bg-red-600">
-                                </form>
-
-                            </div>
-
-                        </div>
+                        </article>
                     @endforeach
-
                 </div>
-
             @endif
-
         </section>
 
     </main>

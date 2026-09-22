@@ -55,7 +55,7 @@
             </div>
 
 
-            <div class="card hotel-details-card">
+            <div class="hotel-details-card">
 
                 <div class="details-grid">
 
@@ -122,10 +122,10 @@
 
                         <span class="detail-value">
 
-                            {{ $hotel->address }},
-                            {{ $hotel->city }},
-                            {{ $hotel->district }},
-                            {{ $hotel->country }}
+                            {{ $hotel->address }}
+                            @if ($hotel->city?->name), {{ $hotel->city->name }}@endif
+                            @if ($hotel->district), {{ $hotel->district }}@endif
+                            @if ($hotel->country), {{ $hotel->country }}@endif
 
                         </span>
 
@@ -246,7 +246,7 @@
 
             {{-- IMAGE UPLOAD --}}
 
-            <div class="card image-upload-card">
+            <div class="image-upload-card">
 
                 <form action="{{ route('owner.hotel-images.store', $hotel) }}" method="POST"
                     enctype="multipart/form-data" class="image-upload-form">
@@ -276,7 +276,7 @@
 
             @if ($hotel->image->isEmpty())
 
-                <div class="empty-state card">
+                <div class="empty-state">
 
                     <h3>No images yet</h3>
 
@@ -352,7 +352,7 @@
 
             @if ($hotel->roomTypes->isEmpty())
 
-                <div class="empty-state card">
+                <div class="empty-state">
 
                     <h3>No room types yet</h3>
 
@@ -548,7 +548,7 @@
 
             @if ($hotel->rooms->isEmpty())
 
-                <div class="empty-state card">
+                <div class="empty-state">
 
                     <h3>No rooms yet</h3>
 

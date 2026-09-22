@@ -12,49 +12,39 @@ class PaymentController extends Controller
 {
     public function initiate(Booking $booking)
     {
-        // Make sure the booking belongs to the logged-in user.
-        abort_unless(
-            $booking->user_id === Auth::id(),
-            403
-        );
+        $payment = DB::transaction(function () use ($booking) {
+            $lockedBooking = Booking::whereKey($booking->id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        // Payment can only be started for a pending booking.
-        abort_unless(
-            $booking->payment_status === 'pending',
-            400,
-            'This booking cannot be paid.'
-        );
+            abort_unless($lockedBooking->user_id === Auth::id(), 403);
+            abort_unless(
+                $lockedBooking->payment_status === 'pending',
+                400,
+                'This booking cannot be paid.'
+            );
 
-        // Do not allow payment after the booking has expired.
-        if (
-            $booking->expires_at &&
-            $booking->expires_at->isPast()
-        ) {
-            abort(400, 'This booking has expired.');
-        }
+            if ($lockedBooking->expires_at && $lockedBooking->expires_at->isPast()) {
+                abort(400, 'This booking has expired.');
+            }
 
-        /*
-         * Reuse an existing pending payment if one exists.
-         *
-         * This prevents the same booking from creating
-         * multiple active payment attempts unnecessarily.
-         */
-        $payment = Payment::where('booking_id', $booking->id)
-            ->where('status', 'pending')
-            ->latest()
-            ->first();
+            $payment = Payment::where('booking_id', $lockedBooking->id)
+                ->where('status', 'pending')
+                ->latest('id')
+                ->first();
 
-        if (!$payment) {
-            $transactionUuid = Str::uuid()->toString();
+            if ($payment) {
+                return $payment;
+            }
 
-            $payment = Payment::create([
-                'booking_id' => $booking->id,
-                'transaction_id' => $transactionUuid,
+            return Payment::create([
+                'booking_id' => $lockedBooking->id,
+                'transaction_id' => Str::uuid()->toString(),
                 'payment_method' => 'esewa',
-                'amount' => $booking->total_price,
+                'amount' => $lockedBooking->total_price,
                 'status' => 'pending',
             ]);
-        }
+        });
 
         /*
          * IMPORTANT:
@@ -62,12 +52,7 @@ class PaymentController extends Controller
          * We never accept the payment amount from the browser.
          */
         
-        $totalAmount = number_format(
-            (float) $payment->amount,
-            2,
-            '.',
-            ''
-        );
+        $totalAmount = $this->normalizeAmount($payment->amount);
 
         $productCode = config('services.esewa.merchant_code');
         $secretKey = config('services.esewa.secret_key');
@@ -272,67 +257,33 @@ class PaymentController extends Controller
         }
 
         /*
-         * Compare the amount received from eSewa
-         * with the amount stored in OUR database.
-         */
-        $databaseAmount = number_format(
-            (float) $payment->amount,
-            2,
-            '.',
-            ''
-        );
-
-        $responseAmount = number_format(
-            (float) $response['total_amount'],
-            2,
-            '.',
-            ''
-        );
-
-        abort_unless(
-            $databaseAmount === $responseAmount,
-            400,
-            'Payment amount mismatch.'
-        );
-
-        /*
-         * Prevent the same successful payment from
-         * being processed repeatedly.
-         */
-        if ($payment->status === 'success') {
-            return redirect()
-                ->route('bookings.history')
-                ->with(
-                    'success',
-                    'Payment was already processed.'
-                );
-        }
-
-        /*
          * Atomically update both payment and booking.
          *
          * Either both updates succeed or neither does.
          */
-        DB::transaction(function () use (
-            $payment,
-            $response
-        ) {
+        $wasAlreadyProcessed = DB::transaction(function () use ($payment, $response) {
             /*
              * Lock the payment row so two requests
              * cannot process the same payment simultaneously.
              */
-            $payment = Payment::where(
-                'id',
-                $payment->id
-            )
+            $payment = Payment::whereKey($payment->id)
                 ->lockForUpdate()
                 ->firstOrFail();
+
+            $booking = Booking::whereKey($payment->booking_id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $databaseAmount = $this->normalizeAmount($payment->amount);
+            $responseAmount = $this->normalizeAmount($response['total_amount']);
+
+            abort_unless($databaseAmount === $responseAmount, 400, 'Payment amount mismatch.');
 
             /*
              * Check again after acquiring the lock.
              */
-            if ($payment->status === 'success') {
-                return;
+            if ($payment->status === 'success' || $booking->payment_status === 'paid') {
+                return true;
             }
 
             /*
@@ -348,11 +299,19 @@ class PaymentController extends Controller
             /*
              * Update the associated booking.
              */
-            $payment->booking->update([
+            $booking->update([
                 'payment_status' => 'paid',
                 'booking_status' => 'confirmed',
             ]);
+
+            return false;
         });
+
+        if ($wasAlreadyProcessed) {
+            return redirect()
+                ->route('bookings.history')
+                ->with('success', 'Payment was already processed.');
+        }
 
         return redirect()
             ->route('bookings.history')
@@ -384,33 +343,30 @@ class PaymentController extends Controller
             abort(404, 'Payment record not found.');
         }
 
-        /*
-         * Do not overwrite an already successful payment.
-         */
-        if ($payment->status === 'success') {
+        abort_unless($payment->booking->user_id === Auth::id(), 403);
+
+        $alreadyPaid = DB::transaction(function () use ($payment) {
+            $payment = Payment::whereKey($payment->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+            $booking = Booking::whereKey($payment->booking_id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($payment->status === 'success' || $booking->payment_status === 'paid') {
+                return true;
+            }
+
+            $payment->update(['status' => 'failed']);
+            $booking->update(['payment_status' => 'failed']);
+
+            return false;
+        });
+
+        if ($alreadyPaid) {
             return redirect()
                 ->route('bookings.history')
-                ->with(
-                    'success',
-                    'Payment was already completed.'
-                );
-        }
-
-        /*
-         * Mark this payment attempt as failed.
-         */
-        $payment->update([
-            'status' => 'failed',
-        ]);
-
-        /*
-         * Only change the booking if it has not already
-         * been successfully paid.
-         */
-        if ($payment->booking->payment_status !== 'paid') {
-            $payment->booking->update([
-                'payment_status' => 'failed',
-            ]);
+                ->with('success', 'Payment was already completed.');
         }
 
         return redirect()
@@ -419,5 +375,20 @@ class PaymentController extends Controller
                 'error',
                 'Payment failed. Your booking was not confirmed.'
             );
+    }
+
+    private function normalizeAmount(mixed $amount): string
+    {
+        $amount = (string) $amount;
+
+        if (! preg_match('/^\d+(?:\.\d{1,2})?$/', $amount)) {
+            abort(400, 'Invalid payment amount.');
+        }
+
+        [$whole, $fraction] = array_pad(explode('.', $amount, 2), 2, '');
+
+        return (ltrim($whole, '0') ?: '0')
+            . '.'
+            . str_pad($fraction, 2, '0');
     }
 }

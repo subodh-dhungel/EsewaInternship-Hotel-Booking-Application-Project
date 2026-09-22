@@ -291,18 +291,18 @@ class BookingController extends Controller
             403
         );
 
-        // Only pending and confirmed bookings can be cancelled
-        abort_if(
-            in_array($booking->booking_status, ['pending','confirmed']),
-            403
+        // Only pending and confirmed bookings can be cancelled.
+        abort_unless(
+            in_array($booking->booking_status, ['pending', 'confirmed'], true),
+            403,
+            'Only pending or confirmed bookings can be cancelled.'
         );
 
         // rollback esewa payment
-        
 
-        // Cancel the booking
+        // Cancel the booking.
         $booking->update([
-            'booking_status'=>'cancelled'
+            'booking_status' => 'cancelled',
         ]);
 
         // redirect to the bookings page

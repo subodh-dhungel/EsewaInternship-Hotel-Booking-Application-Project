@@ -38,7 +38,7 @@
 
         @if ($errors->any())
 
-            <div class="card form-errors">
+            <div class="form-errors">
 
                 <h3>Please fix the following errors:</h3>
 

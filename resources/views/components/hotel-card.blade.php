@@ -1,106 +1,34 @@
-<div class="hotel-card">
+@php
+    $room = $hotel->roomTypes
+        ->sortBy(fn ($room) => $room->discount_price ?? $room->price)
+        ->first();
+@endphp
 
-    {{-- Hotel Image --}}
-    <div class="hotel-image">
-        <img
-            src="{{ asset('storage/' . $hotel->featured_image) }}"
-            alt="{{ $hotel->name }}"
-        >
-    </div>
+<article class="hotel-card hotel-card--result">
+    <a class="hotel-image" href="{{ route('hotels.show', $hotel->id) }}">
+        <img src="{{ asset('storage/' . $hotel->featured_image) }}" alt="{{ $hotel->name }}">
+        <span class="hotel-card-badge">Available to book</span>
+    </a>
 
     <div class="hotel-body">
+        <div class="hotel-card-topline">
+            <span class="hotel-location">{{ $hotel->city?->name ?? 'Nepal' }}{{ $hotel->city?->country ? ', ' . $hotel->city->country : '' }}</span>
+            <span class="hotel-rating">★ {{ number_format($hotel->star_rating, 1) }}</span>
+        </div>
 
-        {{-- Rating --}}
-        <div class="rating">
+        <h3><a href="{{ route('hotels.show', $hotel->id) }}">{{ $hotel->name }}</a></h3>
+        <p class="amenities">{{ $hotel->amenity->pluck('name')->take(3)->implode(' · ') ?: 'Comfortable stay with thoughtful amenities' }}</p>
 
-            <div class="stars">
-
-                <span class="stars-empty">
-                    ★★★★★
-                </span>
-
-                <span
-                    class="stars-filled"
-                    style="width: {{ ($hotel->star_rating / 5) * 100 }}%;"
-                >
-                    ★★★★★
-                </span>
-
+        <div class="hotel-card-footer">
+            <div>
+                @if ($room)
+                    <strong class="hotel-price">रु {{ number_format($room->discount_price ?? $room->price, 0) }}</strong>
+                    <small>/ night</small>
+                @else
+                    <strong class="hotel-price">Price unavailable</strong>
+                @endif
             </div>
-
-            <span class="rating-number">
-                {{ number_format($hotel->star_rating, 1) }}
-            </span>
-
+            <a class="hotel-card-link" href="{{ route('hotels.show', $hotel->id) }}">View hotel <span aria-hidden="true">→</span></a>
         </div>
-
-
-        {{-- Hotel Name --}}
-        <h3>
-            <strong>
-                {{ $hotel->name }}
-            </strong>
-        </h3>
-
-
-        {{-- Location --}}
-        <p class="hotel-location">
-            {{ $hotel->city->name }}, {{$hotel->city->country}}
-        </p>
-
-
-        {{-- Amenities --}}
-        <p class="amenities">
-            {{ $hotel->amenity->pluck('name')->implode(' • ') }}
-        </p>
-
-
-        {{-- Find Cheapest Room --}}
-        @php
-            $room = $hotel->roomTypes
-                ->sortBy(function ($room) {
-                    return $room->discount_price ?? $room->price;
-                })
-                ->first();
-        @endphp
-
-
-        {{-- Price --}}
-        <div class="price-row">
-
-            @if ($room)
-
-                <strong>
-                    रु {{ number_format($room->discount_price ?? $room->price, 2) }}
-                </strong>
-
-                <span>
-                    / night
-                </span>
-
-            @else
-
-                <strong>
-                    Price unavailable
-                </strong>
-
-            @endif
-
-        </div>
-
-
-        {{-- Customer Action --}}
-        <div class="hotel-actions">
-
-            <a
-                href="{{ route('hotels.show', $hotel->id) }}"
-                class="btn"
-            >
-                View Hotel
-            </a>
-
-        </div>
-
     </div>
-
-</div>
+</article>

@@ -111,6 +111,21 @@
 
             <!-- Page Content -->
             <main class="owner-content">
+                @if (session('success') || session('error') || session('warning') || session('info'))
+                    <div class="flash-messages" role="status" aria-live="polite">
+                        @foreach (['success', 'error', 'warning', 'info'] as $flashType)
+                            @if (session($flashType))
+                                <div class="flash-message flash-message--{{ $flashType }}">
+                                    <span class="flash-message__icon" aria-hidden="true">
+                                        {{ $flashType === 'success' ? '✓' : ($flashType === 'error' ? '!' : 'i') }}
+                                    </span>
+                                    <p>{{ session($flashType) }}</p>
+                                    <button type="button" class="flash-message__close" aria-label="Dismiss message">&times;</button>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
                 {{ $slot }}
             </main>
 

@@ -218,7 +218,7 @@
                                             </div>
 
                                             <div class="hotel-city">
-                                                {{ $performance['hotel']->city }}
+                                                {{ $performance['hotel']->city?->name ?? 'Nepal' }}
                                             </div>
 
                                         </div>

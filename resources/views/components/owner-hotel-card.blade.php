@@ -63,7 +63,7 @@
 
         {{-- Location --}}
         <p class="hotel-location">
-            {{ $hotel->city }}, {{ $hotel->district }}
+            {{ $hotel->city?->name ?? 'Nepal' }}{{ $hotel->district ? ', ' . $hotel->district : '' }}
         </p>
 
 

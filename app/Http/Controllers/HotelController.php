@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\Cities;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -28,7 +29,11 @@ class HotelController extends Controller
      */
     public function index(Request $request)
     {
-        $location = $request->input('location');
+        $search = $request->input('search', $request->input('location'));
+        $cityId = $request->integer('city_id') ?: null;
+        $minRating = $request->input('min_rating');
+        $maxPrice = $request->input('max_price');
+        $sort = $request->input('sort', 'recommended');
         $checkIn = $request->input('check_in');
         $checkOut = $request->input('check_out');
         $guests = $request->input('guests');
@@ -39,19 +44,41 @@ class HotelController extends Controller
             'city',
         ])
             ->where('status', 'active')
-            ->when($location, function ($query) use ($location) {
-                $query->where(function ($query) use ($location) {
-                    $query->where('name', 'like', '%' . $location . '%')
-                        ->orWhereHas('city', function ($query) use ($location) {
-                            $query->where('name', 'like', '%' . $location . '%');
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhereHas('city', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
                         });
                 });
             })
+            ->when($cityId, fn ($query) => $query->where('city_id', $cityId))
+            ->when($minRating, fn ($query) => $query->where('star_rating', '>=', $minRating))
+            ->when($maxPrice, fn ($query) => $query->whereHas('roomTypes', function ($query) use ($maxPrice) {
+                $query->whereRaw('COALESCE(discount_price, price) <= ?', [$maxPrice]);
+            }))
+            ->when($sort === 'rating', fn ($query) => $query->orderByDesc('star_rating'))
+            ->when($sort === 'name', fn ($query) => $query->orderBy('name'))
             ->get();
+
+        if ($sort === 'price_low' || $sort === 'price_high') {
+            $hotels = $hotels->sortBy(function ($hotel) {
+                return $hotel->roomTypes->min(fn ($room) => $room->discount_price ?? $room->price) ?? PHP_INT_MAX;
+            }, SORT_NUMERIC, $sort === 'price_high')->values();
+        }
+
+        $cities = Cities::query()->orderBy('name')->get(['id', 'name']);
+        $priceMaximum = (int) (\App\Models\RoomTypes::query()->selectRaw('MAX(COALESCE(discount_price, price)) as maximum')->value('maximum') ?? 0);
 
         return view('hotels.hotelList', [
             'hotels' => $hotels,
-            'location' => $location,
+            'search' => $search,
+            'cityId' => $cityId,
+            'minRating' => $minRating,
+            'maxPrice' => $maxPrice,
+            'sort' => $sort,
+            'cities' => $cities,
+            'priceMaximum' => $priceMaximum,
             'checkIn' => $checkIn,
             'checkOut' => $checkOut,
             'guests' => $guests,

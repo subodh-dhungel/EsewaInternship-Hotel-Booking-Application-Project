@@ -53,7 +53,7 @@
             </div>
 
 
-            <div class="card booking-hotel-card">
+            <div class="booking-hotel-card">
 
                 <div class="details-grid">
 
@@ -205,7 +205,7 @@
             </div>
 
 
-            <div class="card booking-form-card">
+            <div class="booking-form-card">
 
                 <form
                     action="{{ route('bookings.checkAvailability', [$hotel, $room_type]) }}"

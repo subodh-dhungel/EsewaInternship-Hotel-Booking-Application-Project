@@ -99,7 +99,7 @@ class RoomController extends Controller
             'total_rooms' => $totalRooms,
             'available_rooms' => $availableRooms,
         ]);
-
+        
         return redirect()
             ->back()
             ->with('success', 'Room created successfully.');

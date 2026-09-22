@@ -51,7 +51,7 @@
             </div>
 
 
-            <div class="card">
+            <div class="form-surface">
 
                 <form
                     action="{{ route('rooms.store', $hotel) }}"

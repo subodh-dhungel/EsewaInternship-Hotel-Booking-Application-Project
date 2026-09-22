@@ -13,5 +13,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/payment/esewa/success', [PaymentController::class, 'success'])
     ->name('payments.esewa.success');
 
-Route::get('/payment/esewa/failure', [PaymentController::class, 'failure'])
-    ->name('payments.esewa.failure');
+Route::middleware('auth')->group(function () {
+    Route::get('/payment/esewa/failure', [PaymentController::class, 'failure'])
+        ->name('payments.esewa.failure');
+});

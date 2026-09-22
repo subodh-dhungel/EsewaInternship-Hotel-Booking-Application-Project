@@ -30,7 +30,7 @@
              ===================================================== --}}
 
         @if ($errors->any())
-            <div class="card form-errors">
+            <div class="form-errors">
                 <h3>Please fix the following errors:</h3>
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -61,7 +61,7 @@
             </div>
 
 
-            <div class="card">
+            <div class="form-surface">
 
                 <form
                     action="{{ route('rooms.update', [

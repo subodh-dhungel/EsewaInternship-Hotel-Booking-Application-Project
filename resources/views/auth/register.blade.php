@@ -1,12 +1,22 @@
 <x-layout>
     <main class="auth-page">
+        <div class="auth-shell">
+            <aside class="auth-story auth-story--register">
+                <div class="auth-story__shade"></div>
+                <div class="auth-story__content">
+                    <span class="auth-overline">Your next stay starts here</span>
+                    <h1>Make room for<br><em>good days.</em></h1>
+                    <p>Join a simpler way to discover hotels, resorts and memorable places across Nepal.</p>
+                    <div class="auth-highlights"><span>✓</span><p>Verified properties</p><span>✓</span><p>Secure booking</p><span>✓</span><p>Local support</p></div>
+                </div>
+            </aside>
 
-        <div class="auth-card">
-
-            <div class="auth-header">
-                <h1>Create an Account</h1>
-                <p>Join eSewa Hotels and start booking your stay.</p>
-            </div>
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="auth-card-kicker">eSewa Hotels</span>
+                    <h2>Create your account</h2>
+                    <p>Save stays and book your next escape faster.</p>
+                </div>
 
             <form action="{{ route('user.register') }}" method="POST">
                 @csrf
@@ -46,9 +56,7 @@
                         placeholder="Confirm your password" required autocomplete="new-password">
                 </div>
 
-                <button type="submit" class="btn auth-btn">
-                    Create Account
-                </button>
+                <button type="submit" class="btn auth-btn">Create account <span aria-hidden="true">→</span></button>
 
             </form>
 
@@ -59,6 +67,7 @@
                 </p>
             </div>
 
+            </div>
         </div>
 
     </main>
